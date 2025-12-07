@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="24dp"
+    android:background="#FFFFFF"
+    tools:context=".LoginActivity">
+
+    <!-- 顶部的 Logo/标题文字 -->
+    <TextView
+        android:id="@+id/tv_app_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:text="特品纳四方\n地道暖时光"
+        android:fontFamily="@font/custom_slogan_font"
+        android:textSize="28sp"
+        android:textColor="#333333"
+        android:textStyle="italic"
+        android:lineSpacingExtra="10dp"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- 手机号输入框 -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/input_phone_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        app:layout_constraintTop_toBottomOf="@id/tv_app_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="phone"
+            android:hint="请输入手机号码"
+            android:maxLength="11" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- 密码输入框 -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/input_password_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:passwordToggleEnabled="true"
+        app:layout_constraintTop_toBottomOf="@id/input_phone_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:hint="请输入密码" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- 登录按钮 -->
+    <Button
+        android:id="@+id/btn_login"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginTop="32dp"
+        android:text="登 录"
+        android:textSize="18sp"
+        android:textColor="#333333"
+        android:backgroundTint="#FFE291"
+        app:cornerRadius="8dp"
+        app:layout_constraintTop_toBottomOf="@id/input_password_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- 忘记密码 & 注册 -->
+    <LinearLayout
+        android:id="@+id/layout_links"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        android:gravity="end"
+        app:layout_constraintTop_toBottomOf="@id/btn_login">
+
+        <TextView
+            android:id="@+id/tv_forgot_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="忘记密码"
+            android:textColor="#666666"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="|"
+            android:textColor="#CCCCCC" />
+
+        <TextView
+            android:id="@+id/tv_register"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="注册"
+            android:textColor="#333333"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- 底部区域 (第三方登录和协议) -->
+    <LinearLayout
+        android:id="@+id/bottom_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:paddingBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <!-- 第三方登录标题 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="第三方登录"
+            android:textColor="#666666"
+            android:textSize="14sp" />
+
+        <!-- 第三方登录图标 (使用占位符) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <!-- 微信 -->
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="32dp"
+                android:src="@android:drawable/ic_menu_crop"
+                android:background="@drawable/rounded_circle"
+                android:contentDescription="微信登录" />
+
+            <!-- 手机号 -->
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginEnd="32dp"
+                android:src="@android:drawable/ic_menu_compass"
+                android:background="@drawable/rounded_circle"
+                android:contentDescription="手机号登录" />
+
+            <!-- 支付宝 -->
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@android:drawable/ic_menu_camera"
+                android:background="@drawable/rounded_circle"
+                android:contentDescription="支付宝登录" />
+        </LinearLayout>
+
+        <!-- 用户协议和隐私政策 -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/cb_agreement"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:minWidth="0dp"
+                android:minHeight="0dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="我已阅读并同意 "
+                android:textSize="12sp"
+                android:textColor="#666666"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="《用户协议》"
+                android:textSize="12sp"
+                android:textColor="#2196F3" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="《隐私政策》"
+                android:textSize="12sp"
+                android:textColor="#2196F3" />
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
