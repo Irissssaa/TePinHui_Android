@@ -16,7 +16,7 @@
         android:layout_marginTop="64dp"
         android:text="特品纳四方\n地道暖时光"
         android:fontFamily="@font/custom_slogan_font"
-        android:textSize="28sp"
+        android:textSize="40sp"
         android:textColor="#333333"
         android:textStyle="italic"
         android:lineSpacingExtra="10dp"
@@ -145,24 +145,16 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_marginEnd="32dp"
-                android:src="@android:drawable/ic_menu_crop"
-                android:background="@drawable/rounded_circle"
+                android:src="@drawable/ic_weixin_new"
                 android:contentDescription="微信登录" />
 
             <!-- 手机号 -->
-            <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_marginEnd="32dp"
-                android:src="@android:drawable/ic_menu_compass"
-                android:background="@drawable/rounded_circle"
-                android:contentDescription="手机号登录" />
 
             <!-- 支付宝 -->
             <ImageView
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:src="@android:drawable/ic_menu_camera"
+                android:src="@drawable/ic_zhifubao_new"
                 android:background="@drawable/rounded_circle"
                 android:contentDescription="支付宝登录" />
         </LinearLayout>
