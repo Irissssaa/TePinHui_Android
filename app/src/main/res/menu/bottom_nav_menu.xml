@@ -2,26 +2,26 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/navigation_home"
-        android:icon="@android:drawable/ic_menu_view"
+        android:icon="@drawable/selector_home"
         android:title="首页" />
 
     <item
         android:id="@+id/navigation_community"
-        android:icon="@android:drawable/ic_menu_myplaces"
+        android:icon="@drawable/selector_community"
         android:title="社区" />
 
     <item
         android:id="@+id/navigation_cart"
-        android:icon="@android:drawable/ic_menu_agenda"
+        android:icon="@drawable/selector_cart"
         android:title="购物车" />
 
     <item
         android:id="@+id/navigation_message"
-        android:icon="@android:drawable/sym_action_chat"
-        android:title="信息" />
+        android:icon="@drawable/selector_message"
+        android:title="消息" />
 
     <item
-        android:id="@+id/navigation_me"
-        android:icon="@android:drawable/ic_menu_my_calendar"
+        android:id="@+id/navigation_mine"
+        android:icon="@drawable/selector_mine"
         android:title="我的" />
 </menu>
