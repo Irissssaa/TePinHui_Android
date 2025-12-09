@@ -12,7 +12,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText etPhone;
     private EditText etPassword;
-    private Button btnLogin;
     private CheckBox cbAgreement;
 
     @Override
@@ -23,13 +22,11 @@ public class LoginActivity extends AppCompatActivity {
         // 1. 查找控件
         etPhone = findViewById(R.id.et_phone);
         etPassword = findViewById(R.id.et_password);
-        btnLogin = findViewById(R.id.btn_login);
+        Button btnLogin = findViewById(R.id.btn_login);
         cbAgreement = findViewById(R.id.cb_agreement);
 
         // 2. 监听登录按钮点击
-        btnLogin.setOnClickListener(v -> {
-            attemptLogin();
-        });
+        btnLogin.setOnClickListener(v -> attemptLogin());
     }
 
     private void attemptLogin() {

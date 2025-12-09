@@ -2,4 +2,11 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <!-- 消息页面使用的颜色 -->
+    <color name="red_primary">#FF4081</color>
+    <color name="gray_dark">#666666</color>
+    <color name="black_primary">#333333</color>
+    <color name="gray_medium">#999999</color>
+    <color name="gray_light">#CCCCCC</color>
+    <color name="background_gray">#F5F5F5</color>
 </resources>
