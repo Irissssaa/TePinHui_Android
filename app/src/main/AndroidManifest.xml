@@ -13,6 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TePinhui">
+
         <!-- 主界面：现在是一个普通的 activity，只有登录成功才能进来 -->
         <activity android:name=".MainActivity" />
 
@@ -24,6 +25,24 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- 我的页面相关Activity -->
+        <activity android:name=".AllOrdersActivity" />
+        <activity android:name=".PendingPaymentActivity" />
+        <activity android:name=".PendingShipmentActivity" />
+        <activity android:name=".PendingReceiptActivity" />
+        <activity android:name=".PendingReviewActivity" />
+        <activity android:name=".RefundActivity" />
+        <activity android:name=".AddressActivity" />
+        <activity android:name=".FootprintActivity" />
+        <activity android:name=".FavoriteActivity" />
+        <activity android:name=".ServiceCenterActivity" />
+        <activity android:name=".OnlineServiceActivity" />
+
+        <!-- 其他通用Activity -->
+        <activity android:name=".ProductDetailActivity" />
+        <activity android:name=".UserProfileActivity" />
+
     </application>
 
 </manifest>

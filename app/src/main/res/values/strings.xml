@@ -14,4 +14,7 @@
     <string name="service_center">服务中心</string>
     <string name="online_customer_service">在线客服</string>
     <string name="recommend_for_you">为你推荐</string>
+    <string name="_12_00">12:00</string>
+    <string name="_520_1314">520****1314</string>
+    <string name="_2005">新用户2005</string>
 </resources>

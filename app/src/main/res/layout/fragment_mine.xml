@@ -11,6 +11,7 @@
 
         <!-- 顶部用户信息栏 -->
         <LinearLayout
+            android:id="@+id/layout_user_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -39,7 +40,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="4dp"
-                    android:text="新用户2005"
+                    android:text="@string/_2005"
                     android:textColor="@android:color/black"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -48,15 +49,16 @@
                     android:id="@+id/tv_user_id"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="520****1314"
+                    android:text="@string/_520_1314"
                     android:textColor="#666666"
                     android:textSize="14sp" />
             </LinearLayout>
 
             <TextView
+                android:id="@+id/tv_login_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="12:00"
+                android:text="@string/_12_00"
                 android:textSize="12sp"
                 android:textColor="#999999"/>
         </LinearLayout>
@@ -74,6 +76,7 @@
                 android:id="@+id/layout_all_orders"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusable="true"
                 android:orientation="horizontal"
                 android:paddingHorizontal="16dp"
                 android:paddingVertical="8dp"
@@ -81,18 +84,20 @@
                 android:background="?android:attr/selectableItemBackground">
 
                 <TextView
+                    android:id="@+id/tv_my_orders"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="我的订单"
+                    android:text="@string/my_order"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="@android:color/black"/>
 
                 <TextView
+                    android:id="@+id/tv_view_all_orders"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="全部订单>>"
+                    android:text="@string/all_orders"
                     android:textSize="14sp"
                     android:textColor="#999999"/>
             </LinearLayout>
@@ -110,21 +115,24 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:focusable="true"
                     android:orientation="vertical"
                     android:gravity="center"
                     android:clickable="true"
                     android:background="?android:attr/selectableItemBackground">
 
                     <ImageView
+                        android:id="@+id/iv_pending_payment"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:src="@drawable/ic_weixin_new"
                         android:layout_marginBottom="4dp"/>
 
                     <TextView
+                        android:id="@+id/tv_pending_payment"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="待付款"
+                        android:text="@string/pending_payment"
                         android:textSize="12sp"
                         android:textColor="#666666"/>
                 </LinearLayout>
@@ -135,21 +143,24 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:focusable="true"
                     android:orientation="vertical"
                     android:gravity="center"
                     android:clickable="true"
                     android:background="?android:attr/selectableItemBackground">
 
                     <ImageView
+                        android:id="@+id/iv_pending_shipment"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:src="@drawable/ic_weixin_new"
                         android:layout_marginBottom="4dp"/>
 
                     <TextView
+                        android:id="@+id/tv_pending_shipment"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="待发货"
+                        android:text="@string/tobe_shipped"
                         android:textSize="12sp"
                         android:textColor="#666666"/>
                 </LinearLayout>
@@ -160,21 +171,24 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:focusable="true"
                     android:orientation="vertical"
                     android:gravity="center"
                     android:clickable="true"
                     android:background="?android:attr/selectableItemBackground">
 
                     <ImageView
+                        android:id="@+id/iv_pending_receipt"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:src="@drawable/ic_weixin_new"
                         android:layout_marginBottom="4dp"/>
 
                     <TextView
+                        android:id="@+id/tv_pending_receipt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="待收货"
+                        android:text="@string/awaiting_delivery"
                         android:textSize="12sp"
                         android:textColor="#666666"/>
                 </LinearLayout>
@@ -185,21 +199,24 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:focusable="true"
                     android:orientation="vertical"
                     android:gravity="center"
                     android:clickable="true"
                     android:background="?android:attr/selectableItemBackground">
 
                     <ImageView
+                        android:id="@+id/iv_pending_review"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:src="@drawable/ic_weixin_new"
                         android:layout_marginBottom="4dp"/>
 
                     <TextView
+                        android:id="@+id/tv_pending_review"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="待评价"
+                        android:text="@string/tobe_evaluated"
                         android:textSize="12sp"
                         android:textColor="#666666"/>
                 </LinearLayout>
@@ -210,21 +227,24 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:focusable="true"
                     android:orientation="vertical"
                     android:gravity="center"
                     android:clickable="true"
                     android:background="?android:attr/selectableItemBackground">
 
                     <ImageView
+                        android:id="@+id/iv_refund"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:src="@drawable/ic_weixin_new"
                         android:layout_marginBottom="4dp"/>
 
                     <TextView
+                        android:id="@+id/tv_refund"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="退款/售后"
+                        android:text="@string/refund_and_after_sales"
                         android:textSize="12sp"
                         android:textColor="#666666"/>
                 </LinearLayout>
@@ -240,9 +260,10 @@
             android:layout_marginBottom="8dp">
 
             <TextView
+                android:id="@+id/tv_my_services"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="我的服务"
+                android:text="@string/my_services"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="@android:color/black"
@@ -262,21 +283,24 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:focusable="true"
                     android:orientation="vertical"
                     android:gravity="center"
                     android:clickable="true"
                     android:background="?android:attr/selectableItemBackground">
 
                     <ImageView
+                        android:id="@+id/iv_address"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:src="@drawable/ic_weixin_new"
                         android:layout_marginBottom="4dp"/>
 
                     <TextView
+                        android:id="@+id/tv_address"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="收货地址"
+                        android:text="@string/delivery_address"
                         android:textSize="12sp"
                         android:textColor="#666666"/>
                 </LinearLayout>
@@ -287,21 +311,24 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:focusable="true"
                     android:orientation="vertical"
                     android:gravity="center"
                     android:clickable="true"
                     android:background="?android:attr/selectableItemBackground">
 
                     <ImageView
+                        android:id="@+id/iv_footprint"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:src="@drawable/ic_weixin_new"
                         android:layout_marginBottom="4dp"/>
 
                     <TextView
+                        android:id="@+id/tv_footprint"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="足迹"
+                        android:text="@string/footprints"
                         android:textSize="12sp"
                         android:textColor="#666666"/>
                 </LinearLayout>
@@ -312,21 +339,24 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:focusable="true"
                     android:orientation="vertical"
                     android:gravity="center"
                     android:clickable="true"
                     android:background="?android:attr/selectableItemBackground">
 
                     <ImageView
+                        android:id="@+id/iv_favorite"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:src="@drawable/ic_weixin_new"
                         android:layout_marginBottom="4dp"/>
 
                     <TextView
+                        android:id="@+id/tv_favorite"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="我的收藏"
+                        android:text="@string/my_favorites"
                         android:textSize="12sp"
                         android:textColor="#666666"/>
                 </LinearLayout>
@@ -337,21 +367,24 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:focusable="true"
                     android:orientation="vertical"
                     android:gravity="center"
                     android:clickable="true"
                     android:background="?android:attr/selectableItemBackground">
 
                     <ImageView
+                        android:id="@+id/iv_service_center"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:src="@drawable/ic_weixin_new"
                         android:layout_marginBottom="4dp"/>
 
                     <TextView
+                        android:id="@+id/tv_service_center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="服务中心"
+                        android:text="@string/service_center"
                         android:textSize="12sp"
                         android:textColor="#666666"/>
                 </LinearLayout>
@@ -370,21 +403,24 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:focusable="true"
                     android:orientation="vertical"
                     android:gravity="center"
                     android:clickable="true"
                     android:background="?android:attr/selectableItemBackground">
 
                     <ImageView
+                        android:id="@+id/iv_online_service"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:src="@drawable/ic_weixin_new"
                         android:layout_marginBottom="4dp"/>
 
                     <TextView
+                        android:id="@+id/tv_online_service"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="在线客服"
+                        android:text="@string/online_customer_service"
                         android:textSize="12sp"
                         android:textColor="#666666"/>
                 </LinearLayout>
@@ -411,21 +447,20 @@
 
         <!-- 为你推荐 -->
         <TextView
+            android:id="@+id/tv_recommend_for_you"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:background="#FFFFFF"
             android:padding="16dp"
-            android:text="为你推荐"
+            android:text="@string/recommend_for_you"
             android:textColor="@android:color/black"
             android:textSize="16sp"
             android:textStyle="bold" />
 
         <!-- 推荐商品列表 -->
-
-        <!-- 底部占位，避免被底部导航栏遮挡 -->
-
         <LinearLayout
+            android:id="@+id/layout_recommend_products"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#FFFFFF"
@@ -435,14 +470,17 @@
 
             <!-- 商品1 -->
             <LinearLayout
+                android:id="@+id/layout_product_1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:background="#FFFFFF"
                 android:orientation="horizontal"
-                android:padding="8dp">
+                android:padding="8dp"
+                android:clickable="true"
+                android:background="?android:attr/selectableItemBackground">
 
                 <ImageView
+                    android:id="@+id/iv_product_1"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:layout_marginEnd="12dp"
@@ -457,6 +495,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/tv_product_name_1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp"
@@ -465,6 +504,7 @@
                         android:textSize="14sp" />
 
                     <TextView
+                        android:id="@+id/tv_product_tag_1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp"
@@ -476,6 +516,7 @@
                         android:textSize="12sp" />
 
                     <TextView
+                        android:id="@+id/tv_product_delivery_1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
@@ -484,6 +525,7 @@
                         android:textSize="12sp" />
 
                     <TextView
+                        android:id="@+id/tv_product_price_1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="￥X/箱"
@@ -495,13 +537,16 @@
 
             <!-- 商品2 -->
             <LinearLayout
+                android:id="@+id/layout_product_2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#FFFFFF"
                 android:orientation="horizontal"
-                android:padding="8dp">
+                android:padding="8dp"
+                android:clickable="true"
+                android:background="?android:attr/selectableItemBackground">
 
                 <ImageView
+                    android:id="@+id/iv_product_2"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:layout_marginEnd="12dp"
@@ -516,6 +561,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:id="@+id/tv_product_name_2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp"
@@ -524,6 +570,7 @@
                         android:textSize="14sp" />
 
                     <TextView
+                        android:id="@+id/tv_product_tag_2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp"
@@ -535,6 +582,7 @@
                         android:textSize="12sp" />
 
                     <TextView
+                        android:id="@+id/tv_product_delivery_2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
@@ -543,6 +591,7 @@
                         android:textSize="12sp" />
 
                     <TextView
+                        android:id="@+id/tv_product_price_2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="￥Y/箱"
@@ -553,6 +602,7 @@
             </LinearLayout>
         </LinearLayout>
 
+        <!-- 底部占位，避免被底部导航栏遮挡 -->
         <View
             android:layout_width="match_parent"
             android:layout_height="60dp" />
