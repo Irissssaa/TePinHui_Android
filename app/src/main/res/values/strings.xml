@@ -2,7 +2,7 @@
     <string name="app_name">TePinhui</string>
     <string name="my_order">我的订单</string>
     <string name="all_orders">全部订单>></string>
-    <string name="pending_payment">待收款</string>
+    <string name="pending_payment">待付款</string>
     <string name="tobe_shipped">待发货</string>
     <string name="awaiting_delivery">待收货</string>
     <string name="tobe_evaluated">待评价</string>

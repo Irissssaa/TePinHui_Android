@@ -47,8 +47,6 @@ public class AllOrdersActivity extends AppCompatActivity {
         rvOrders = findViewById(R.id.rv_orders);
         layoutEmpty = findViewById(R.id.layout_empty);
 
-        // 返回按钮
-        findViewById(R.id.iv_back).setOnClickListener(v -> finish());
     }
 
     private void setupListeners() {

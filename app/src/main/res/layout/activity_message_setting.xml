@@ -21,7 +21,7 @@
             android:layout_marginEnd="16dp"
             android:background="?android:attr/selectableItemBackground"
             android:clickable="true"
-            android:src="@drawable/ic_weixin_new" />
+            android:src="@drawable/news" />
 
         <TextView
             android:layout_width="0dp"
@@ -154,15 +154,11 @@
                 android:id="@+id/tv_retention_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="7天"
+                android:text="30天"
                 android:textSize="14sp"
                 android:textColor="#666666"
                 android:layout_marginEnd="8dp"/>
 
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:src="@drawable/ic_weixin_new"/>
         </LinearLayout>
 
         <!-- 清空消息记录 -->

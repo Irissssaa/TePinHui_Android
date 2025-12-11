@@ -23,7 +23,8 @@
                 android:id="@+id/iv_avatar"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:src="@drawable/ic_weixin_new"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_launcher_background"
                 android:scaleType="centerCrop"
                 android:layout_marginEnd="12dp"
                 android:background="#EEEEEE"/>
@@ -54,13 +55,6 @@
                     android:textSize="14sp" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/tv_login_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/_12_00"
-                android:textSize="12sp"
-                android:textColor="#999999"/>
         </LinearLayout>
 
         <!-- 我的订单区域 -->
@@ -76,7 +70,6 @@
                 android:id="@+id/layout_all_orders"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:focusable="true"
                 android:orientation="horizontal"
                 android:paddingHorizontal="16dp"
                 android:paddingVertical="8dp"
@@ -100,12 +93,14 @@
                     android:text="@string/all_orders"
                     android:textSize="14sp"
                     android:textColor="#999999"/>
+
             </LinearLayout>
 
             <!-- 订单状态分类 -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:baselineAligned="false"
                 android:orientation="horizontal"
                 android:paddingVertical="16dp">
 
@@ -125,7 +120,7 @@
                         android:id="@+id/iv_pending_payment"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
-                        android:src="@drawable/ic_weixin_new"
+                        android:src="@drawable/pending_payment"
                         android:layout_marginBottom="4dp"/>
 
                     <TextView
@@ -153,7 +148,7 @@
                         android:id="@+id/iv_pending_shipment"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
-                        android:src="@drawable/ic_weixin_new"
+                        android:src="@drawable/tobe_shipped"
                         android:layout_marginBottom="4dp"/>
 
                     <TextView
@@ -181,7 +176,7 @@
                         android:id="@+id/iv_pending_receipt"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
-                        android:src="@drawable/ic_weixin_new"
+                        android:src="@drawable/awaiting_delivery"
                         android:layout_marginBottom="4dp"/>
 
                     <TextView
@@ -209,7 +204,7 @@
                         android:id="@+id/iv_pending_review"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
-                        android:src="@drawable/ic_weixin_new"
+                        android:src="@drawable/tobe_evaluated"
                         android:layout_marginBottom="4dp"/>
 
                     <TextView
@@ -237,7 +232,7 @@
                         android:id="@+id/iv_refund"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
-                        android:src="@drawable/ic_weixin_new"
+                        android:src="@drawable/refund_and_after_sales"
                         android:layout_marginBottom="4dp"/>
 
                     <TextView
@@ -293,7 +288,7 @@
                         android:id="@+id/iv_address"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
-                        android:src="@drawable/ic_weixin_new"
+                        android:src="@drawable/delivery_address"
                         android:layout_marginBottom="4dp"/>
 
                     <TextView
@@ -321,7 +316,7 @@
                         android:id="@+id/iv_footprint"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
-                        android:src="@drawable/ic_weixin_new"
+                        android:src="@drawable/footprints"
                         android:layout_marginBottom="4dp"/>
 
                     <TextView
@@ -349,7 +344,7 @@
                         android:id="@+id/iv_favorite"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
-                        android:src="@drawable/ic_weixin_new"
+                        android:src="@drawable/my_favorites"
                         android:layout_marginBottom="4dp"/>
 
                     <TextView
@@ -377,7 +372,7 @@
                         android:id="@+id/iv_service_center"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
-                        android:src="@drawable/ic_weixin_new"
+                        android:src="@drawable/service_center"
                         android:layout_marginBottom="4dp"/>
 
                     <TextView
@@ -413,7 +408,7 @@
                         android:id="@+id/iv_online_service"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
-                        android:src="@drawable/ic_weixin_new"
+                        android:src="@drawable/online_service"
                         android:layout_marginBottom="4dp"/>
 
                     <TextView
@@ -486,7 +481,7 @@
                     android:layout_marginEnd="12dp"
                     android:background="#EEEEEE"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_weixin_new" />
+                    android:src="@drawable/ic_launcher_background" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -552,7 +547,7 @@
                     android:layout_marginEnd="12dp"
                     android:background="#EEEEEE"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_weixin_new" />
+                    android:src="@drawable/ic_launcher_background" />
 
                 <LinearLayout
                     android:layout_width="0dp"

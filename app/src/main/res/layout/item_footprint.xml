@@ -22,7 +22,7 @@
         android:layout_toEndOf="@id/cb_select"
         android:scaleType="centerCrop"
         android:background="#EEEEEE"
-        android:src="@drawable/ic_weixin_new"/>
+        android:src="@drawable/ic_launcher_background"/>
 
     <LinearLayout
         android:layout_width="match_parent"

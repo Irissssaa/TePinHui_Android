@@ -102,29 +102,6 @@ public class FavoriteActivity extends AppCompatActivity {
         // 清空列表
         favoriteList.clear();
 
-        // 模拟不同分类的数据
-        switch (category) {
-            case "all":
-                // 所有收藏
-                favoriteList.add(new FavoriteItem("云南普洱茶", "商品", 128.00, R.drawable.ic_weixin_new, "product"));
-                favoriteList.add(new FavoriteItem("茶马古道茶叶店", "店铺", 4.8, R.drawable.ic_weixin_new, "shop"));
-                favoriteList.add(new FavoriteItem("新疆大枣", "商品", 59.90, R.drawable.ic_weixin_new, "product"));
-                favoriteList.add(new FavoriteItem("新疆特产总店", "店铺", 4.9, R.drawable.ic_weixin_new, "shop"));
-                break;
-            case "products":
-                // 商品收藏
-                favoriteList.add(new FavoriteItem("云南普洱茶", "商品", 128.00, R.drawable.ic_weixin_new, "product"));
-                favoriteList.add(new FavoriteItem("新疆大枣", "商品", 59.90, R.drawable.ic_weixin_new, "product"));
-                favoriteList.add(new FavoriteItem("金华火腿", "商品", 288.00, R.drawable.ic_weixin_new, "product"));
-                break;
-            case "shops":
-                // 店铺收藏
-                favoriteList.add(new FavoriteItem("茶马古道茶叶店", "店铺", 4.8, R.drawable.ic_weixin_new, "shop"));
-                favoriteList.add(new FavoriteItem("新疆特产总店", "店铺", 4.9, R.drawable.ic_weixin_new, "shop"));
-                favoriteList.add(new FavoriteItem("浙江丝绸专营", "店铺", 4.7, R.drawable.ic_weixin_new, "shop"));
-                break;
-        }
-
         // 更新UI
         updateUI();
     }
