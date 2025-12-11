@@ -17,7 +17,8 @@
         <activity android:name=".MainActivity" />
 
         <!-- 登录界面：设置为启动页 (有 intent-filter) -->
-        <activity android:name=".LoginActivity"
+        <activity
+            android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,22 +27,40 @@
         </activity>
 
         <!-- 我的页面相关Activity -->
-        <activity android:name=".AllOrdersActivity" />
-        <activity android:name=".PendingPaymentActivity" />
-        <activity android:name=".PendingShipmentActivity" />
-        <activity android:name=".PendingReceiptActivity" />
-        <activity android:name=".PendingReviewActivity" />
-        <activity android:name=".RefundActivity" />
-        <activity android:name=".AddressActivity" />
-        <activity android:name=".FootprintActivity" />
-        <activity android:name=".FavoriteActivity" />
-        <activity android:name=".ServiceCenterActivity" />
-        <activity android:name=".OnlineServiceActivity" />
-        <activity android:name=".LogisticsInfoActivity" />
-        <activity android:name=".PromotionInfoActivity" />
-        <activity android:name=".LikeInfoActivity" />
-        <activity android:name=".MessageSettingActivity" />
-        <activity android:name=".MessageSearchActivity" />
+        <activity android:name=".AllOrdersActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".PendingPaymentActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".PendingShipmentActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".PendingReceiptActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".PendingReviewActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".RefundActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".AddressActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".FootprintActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".FavoriteActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".ServiceCenterActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".OnlineServiceActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
+        <!-- 消息页面相关Activity -->
+        <activity android:name=".LogisticsInfoActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".PromotionInfoActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".LikeInfoActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".MessageSettingActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity android:name=".MessageSearchActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
     </application>
 
