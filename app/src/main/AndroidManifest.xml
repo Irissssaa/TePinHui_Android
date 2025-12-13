@@ -28,6 +28,10 @@
             </intent-filter>
         </activity>
 
+        <!-- 注册界面 -->
+        <activity android:name=".RegisterActivity" />
+
+
         <!-- 我的页面相关Activity -->
         <activity android:name=".AllOrdersActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />

@@ -46,4 +46,5 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     // 图片加载库 Glide
     implementation("com.github.bumptech.glide:glide:4.15.1")
+    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 }
