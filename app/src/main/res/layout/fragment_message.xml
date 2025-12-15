@@ -5,27 +5,6 @@
     android:orientation="vertical"
     android:background="#f5f5f5">
 
-    <!-- 顶部标题栏 -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:orientation="horizontal"
-        android:background="#FFFFFF"
-        android:gravity="center_vertical"
-        android:paddingHorizontal="16dp">
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
-
-        <ImageView
-            android:id="@+id/iv_setting"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/news"
-            android:layout_marginStart="16dp"/>
-    </LinearLayout>
 
     <!-- 搜索框 -->
     <LinearLayout
