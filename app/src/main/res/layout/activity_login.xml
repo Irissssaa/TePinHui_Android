@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:padding="24dp"
     android:background="#FFFFFF"
-    tools:context=".LoginActivity">
+    tools:context=".ui.auth.LoginActivity">
 
     <!-- 顶部的 Logo/标题文字 -->
     <TextView

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5">
+
+    <!-- ===== 顶部标题 + 切换方式 ===== -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="#FFFFFF"
+        android:paddingHorizontal="12dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="分类"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#333333" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <!-- 按地区 -->
+        <TextView
+            android:id="@+id/tab_region"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="按地区"
+            android:textSize="14sp"
+            android:textColor="#FF4081"
+            android:padding="8dp"
+            android:clickable="true" />
+
+        <!-- 按品类 -->
+        <TextView
+            android:id="@+id/tab_category"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="按品类"
+            android:textSize="14sp"
+            android:textColor="#666666"
+            android:padding="8dp"
+            android:clickable="true" />
+    </LinearLayout>
+
+    <!-- ===== 内容区：左分类 + 右商品 ===== -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <!-- 左侧分类列表 -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_category"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:background="#FFFFFF" />
+
+        <!-- 右侧商品列表 -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_products"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="4dp" />
+    </LinearLayout>
+
+</LinearLayout>

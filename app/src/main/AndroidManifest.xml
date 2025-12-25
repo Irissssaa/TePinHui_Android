@@ -16,11 +16,26 @@
         android:theme="@style/Theme.TePinhui">
 
         <!-- 主界面：现在是一个普通的 activity，只有登录成功才能进来 -->
-        <activity android:name=".MainActivity" />
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".ui.category.CategoryActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".SearchActivity"
+            android:exported="false" />
 
         <!-- 登录界面：设置为启动页 (有 intent-filter) -->
         <activity
-            android:name=".LoginActivity"
+            android:name=".ui.auth.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,43 +44,48 @@
         </activity>
 
         <!-- 注册界面 -->
-        <activity android:name=".RegisterActivity" />
+        <activity android:name=".ui.auth.RegisterActivity" />
 
+        <!-- 商品详情界面 -->
+        <activity android:name=".ui.product.ProductDetailActivity" />
+
+        <!-- 购物车界面 -->
+        <activity android:name=".ui.cart.CartActivity" />
 
         <!-- 我的页面相关Activity -->
-        <activity android:name=".AllOrdersActivity"
+        <activity android:name=".ui.order.AllOrdersActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".PendingPaymentActivity"
+        <activity android:name=".ui.order.PendingPaymentActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".PendingShipmentActivity"
+        <activity android:name=".ui.order.PendingShipmentActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".PendingReceiptActivity"
+        <activity android:name=".ui.order.PendingReceiptActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".PendingReviewActivity"
+        <activity android:name=".ui.order.PendingReviewActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".RefundActivity"
+        <activity android:name=".ui.order.RefundActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".AddressActivity"
+        <activity android:name=".ui.mine.AddressActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".FootprintActivity"
+        <activity android:name=".ui.mine.FootprintActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".FavoriteActivity"
+        <activity android:name=".ui.mine.FavoriteActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".ServiceCenterActivity"
+        <activity android:name=".ui.mine.ServiceCenterActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".OnlineServiceActivity"
+        <activity android:name=".ui.service.OnlineServiceActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
         <!-- 消息页面相关Activity -->
-        <activity android:name=".LogisticsInfoActivity"
+        <activity android:name=".ui.order.LogisticsInfoActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".PromotionInfoActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".LikeInfoActivity"
+        <activity android:name=".ui.mine.LikeInfoActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".MessageSettingActivity"
+        <activity android:name=".ui.message.MessageSettingActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".MessageSearchActivity"
+        <activity android:name=".ui.message.MessageSearchActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
     </application>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5">
+
+    <!-- 顶部标题 -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:gravity="center"
+        android:text="购物车"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:background="#FFFFFF"/>
+
+    <!-- 内容区：列表 / 空态 -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <!-- 商品列表 -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_cart"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="8dp"/>
+
+        <!-- 空购物车 -->
+        <LinearLayout
+            android:id="@+id/layout_empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@drawable/ic_cart_empty"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="购物车还是空的"
+                android:textSize="16sp"
+                android:textColor="#999999"
+                android:layout_marginTop="12dp"/>
+
+            <Button
+                android:id="@+id/btn_go_shopping"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="去逛逛"
+                android:layout_marginTop="16dp"/>
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <!-- 底部结算栏 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp"
+        android:background="#FFFFFF">
+
+        <TextView
+            android:id="@+id/tv_total_price"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="合计：¥0.00"
+            android:textSize="16sp"
+            android:textColor="#FF4081"/>
+
+        <Button
+            android:id="@+id/btn_checkout"
+            android:layout_width="120dp"
+            android:layout_height="40dp"
+            android:text="去结算"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#7C4DFF"/>
+    </LinearLayout>
+
+</LinearLayout>

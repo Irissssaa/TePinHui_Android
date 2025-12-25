@@ -57,21 +57,14 @@
                 <!-- 价格 -->
                 <TextView
                     android:id="@+id/tvPrice"
-                    android:layout_width="0dp"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:text="¥ 99.00"
                     android:textColor="#FF4081"
                     android:textSize="18sp"
                     android:textStyle="bold" />
-
-                <!-- 购买按钮 -->
-                <Button
-                    android:id="@+id/btnBuy"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:text="立即购买"
-                    android:textSize="12sp" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

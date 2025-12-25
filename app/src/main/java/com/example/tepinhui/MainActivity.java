@@ -3,6 +3,12 @@ package com.example.tepinhui;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+
+import com.example.tepinhui.ui.cart.CartFragment;
+import com.example.tepinhui.ui.community.CommunityFragment;
+import com.example.tepinhui.ui.home.HomeFragment;
+import com.example.tepinhui.ui.message.MessageFragment;
+import com.example.tepinhui.ui.mine.MineFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {

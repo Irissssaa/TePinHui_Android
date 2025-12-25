@@ -26,7 +26,7 @@ public class NetworkUtils {
     // 如果是用模拟器，通常是 http://10.0.2.2:8080
     // 如果是用真机，通常是 http://192.168.x.x:8080
     // 注意：后端 LoginController 如果加了 /api 前缀，这里不要加，在调用的时候加
-    private static final String BASE_URL = "http://10.101.230.198:8080";
+    private static final String BASE_URL = "http://10.101.233.208:8080";
 
     private static final OkHttpClient client = new OkHttpClient.Builder()
             .connectTimeout(10, TimeUnit.SECONDS) // 连接超时时间
@@ -103,6 +103,33 @@ public class NetworkUtils {
     }
 
     /**
+     * 发送需要登录态的 POST 请求（带 Authorization: Bearer token）
+     */
+    public static <T> void post(
+            String urlPart,
+            Object bodyObj,
+            String token,
+            Type responseType,
+            Callback<T> callback
+    ) {
+        String url = BASE_URL + urlPart;
+
+        // 1. JSON 序列化
+        String json = gson.toJson(bodyObj);
+        RequestBody body = RequestBody.create(json, MEDIA_TYPE_JSON);
+
+        // 2. 构建请求（重点：Authorization）
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .addHeader("Authorization", "Bearer " + token)
+                .build();
+
+        // 3. 复用 Type 版本的 sendRequest
+        sendRequest(request, responseType, callback);
+    }
+
+    /**
      * 发送 GET 请求 (用于获取商品列表)
      * @param urlPart 接口后半段，例如 "/products"
      */
@@ -114,6 +141,31 @@ public class NetworkUtils {
 
         sendRequest(request, clazz, callback);
     }
+
+    public static <T> void get(String urlPart, final java.lang.reflect.Type type, final Callback<T> callback) {
+        Request request = new Request.Builder()
+                .url(BASE_URL + urlPart)
+                .get()
+                .build();
+
+        sendRequest(request, type, callback);
+    }
+
+    public static <T> void get(
+            String urlPart,
+            String token,
+            Type responseType,
+            Callback<T> callback
+    ) {
+        Request request = new Request.Builder()
+                .url(BASE_URL + urlPart)
+                .get()
+                .addHeader("Authorization", "Bearer " + token)
+                .build();
+
+        sendRequest(request, responseType, callback);
+    }
+
 
     // 统一处理请求发送和结果解析
     private static <T> void sendRequest(Request request, final Class<T> clazz, final Callback<T> callback) {
@@ -147,6 +199,32 @@ public class NetworkUtils {
             }
         });
     }
+// 新增一个支持 Type 的 sendRequest
+    private static <T> void sendRequest(
+            Request request,
+            final java.lang.reflect.Type type,
+            final Callback<T> callback
+    ) {
+        client.newCall(request).enqueue(new okhttp3.Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                runOnUI(() -> callback.onError(e.getMessage()));
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String json = response.body().string();
+                try {
+                    T result = gson.fromJson(json, type);
+                    runOnUI(() -> callback.onSuccess(result));
+                } catch (Exception e) {
+                    runOnUI(() -> callback.onError("解析失败"));
+                }
+            }
+        });
+    }
+
+
 
     // 切换到主线程（更新UI必须在主线程）
     private static void runOnUI(Runnable r) {
