@@ -18,6 +18,7 @@ import com.example.tepinhui.R;
 import com.example.tepinhui.Result;
 import com.example.tepinhui.dto.CartItemDTO;
 import com.example.tepinhui.ui.auth.CartDTO;
+import com.example.tepinhui.network.UserApiService;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -62,10 +63,9 @@ public class CartActivity extends AppCompatActivity {
     }
 
     private void loadCart() {
-        SharedPreferences sp = getSharedPreferences("user", MODE_PRIVATE);
-        String token = sp.getString("token", null);
+        String token = UserApiService.getToken(this);
 
-        if (token == null) {
+        if (token == null || token.isEmpty()) {
             Toast.makeText(this, "请先登录", Toast.LENGTH_SHORT).show();
             return;
         }

@@ -18,6 +18,7 @@ import com.example.tepinhui.NetworkUtils;
 import com.example.tepinhui.R;
 import com.example.tepinhui.Result;
 import com.example.tepinhui.dto.UserDTO;
+import com.example.tepinhui.network.UserApiService;
 import com.google.gson.reflect.TypeToken;
 
 public class LoginActivity extends AppCompatActivity {
@@ -32,7 +33,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        boolean isLogin = getSharedPreferences("sp_user", MODE_PRIVATE)
+        boolean isLogin = UserApiService.isLoggedIn(this) || getSharedPreferences("sp_user", MODE_PRIVATE)
                 .getBoolean("isLogin", false);
 
         if (isLogin) {
@@ -99,11 +100,11 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setEnabled(false);
         btnLogin.setText("登录中...");
 
-        // 3.【发请求】
-        Type type = new TypeToken<Result<UserDTO>>(){}.getType();
-        NetworkUtils.post("/api/auth/login", params, type, new NetworkUtils.Callback<Result<UserDTO>>() {
+        // 3.【发请求】后端登录响应：data = { token, user }
+        Type type = new TypeToken<Result<UserApiService.LoginResponse>>(){}.getType();
+        NetworkUtils.post("/api/auth/login", params, type, new NetworkUtils.Callback<Result<UserApiService.LoginResponse>>() {
             @Override
-            public void onSuccess(Result<UserDTO> result){
+            public void onSuccess(Result<UserApiService.LoginResponse> result){
                 // 恢复按钮状态
                 btnLogin.setEnabled(true);
                 btnLogin.setText("登录");
@@ -113,7 +114,16 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
 
                     // 4. 【保存登录状态】
-                    UserDTO user = result.getData();
+                    UserApiService.LoginResponse data = result.getData();
+                    UserDTO user = data != null ? data.getUser() : null;
+                    String token = data != null ? data.getToken() : null;
+
+                    if (token != null && !token.isEmpty()) {
+                        // 统一保存 token + user（后续订单/购物车/地址等都靠这个 token）
+                        UserApiService.saveUserInfo(LoginActivity.this, token, user);
+                    }
+
+                    // 兼容旧逻辑：仍保留 sp_user 的 isLogin 等字段（避免其他页面只看这个）
                     if (user != null) {
                         getSharedPreferences("sp_user", MODE_PRIVATE)
                                 .edit()
@@ -121,6 +131,11 @@ public class LoginActivity extends AppCompatActivity {
                                 .putInt("userId", user.getId() == null ? -1 : user.getId())
                                 .putString("phone", user.getPhone())
                                 .putString("username", user.getUsername())
+                                .apply();
+                    } else {
+                        getSharedPreferences("sp_user", MODE_PRIVATE)
+                                .edit()
+                                .putBoolean("isLogin", true)
                                 .apply();
                     }
                     // 跳转主页

@@ -26,7 +26,7 @@ public class NetworkUtils {
     // 如果是用模拟器，通常是 http://10.0.2.2:8080
     // 如果是用真机，通常是 http://192.168.x.x:8080
     // 注意：后端 LoginController 如果加了 /api 前缀，这里不要加，在调用的时候加
-    private static final String BASE_URL = "http://10.101.233.208:8080";
+    private static final String BASE_URL = "http://10.101.229.155:8080";
 
     private static final OkHttpClient client = new OkHttpClient.Builder()
             .connectTimeout(10, TimeUnit.SECONDS) // 连接超时时间
@@ -213,10 +213,31 @@ public class NetworkUtils {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                String json = response.body().string();
+                String json = "";
                 try {
-                    T result = gson.fromJson(json, type);
-                    runOnUI(() -> callback.onSuccess(result));
+                    json = response.body() != null ? response.body().string() : "";
+                } catch (Exception ignored) {}
+
+                if (!response.isSuccessful()) {
+                    final int code = response.code();
+                    final String body = json;
+                    runOnUI(() -> {
+                        Log.e("NetworkUtils", "服务器错误: " + code + ", body=" + body);
+                        callback.onError("服务器错误: " + code);
+                    });
+                    return;
+                }
+
+                final String body = json;
+                try {
+                    final T result = gson.fromJson(body, type);
+                    runOnUI(() -> {
+                        if (result == null) {
+                            callback.onError("返回为空");
+                        } else {
+                            callback.onSuccess(result);
+                        }
+                    });
                 } catch (Exception e) {
                     runOnUI(() -> callback.onError("解析失败"));
                 }

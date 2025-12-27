@@ -88,6 +88,17 @@
         <activity android:name=".ui.message.MessageSearchActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
+        <!-- 中国地图（省份可点击） -->
+        <activity android:name=".ui.story.ProvinceMapActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:exported="false" />
+
+        <!-- 省份特产列表 -->
+        <activity
+            android:name=".ui.story.ProvinceProductsActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:exported="false" />
+
     </application>
 
 </manifest>

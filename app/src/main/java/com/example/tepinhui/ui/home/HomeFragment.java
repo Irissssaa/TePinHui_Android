@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -40,6 +41,7 @@ public class HomeFragment extends Fragment {
     private RecyclerView productRecyclerView;
     private ProductAdapter productAdapter;
     private List<ProductDTO> productList;
+    private TextView tvEmptyProducts;
 
     @Nullable
     @Override
@@ -54,7 +56,6 @@ public class HomeFragment extends Fragment {
         View layoutSearch = view.findViewById(R.id.layout_search);
         View btnCategory = view.findViewById(R.id.entry_category);
         View btnHot = view.findViewById(R.id.entry_hot);
-        View btnStory = view.findViewById(R.id.entry_story);
 
         layoutSearch.setOnClickListener(v -> {
             // 先用占位 SearchActivity，没有也没关系
@@ -73,10 +74,6 @@ public class HomeFragment extends Fragment {
             startActivity(intent);
         });
 
-        btnStory.setOnClickListener(v -> {
-            startActivity(new Intent(getContext(), CategoryActivity.class));
-        });
-
         // ---------- Banner 初始化 ----------
         bannerRecyclerView = view.findViewById(R.id.recycler_banner);
         bannerList = new ArrayList<>();
@@ -89,6 +86,7 @@ public class HomeFragment extends Fragment {
 
         // ---------- 商品列表初始化 ----------
         productRecyclerView = view.findViewById(R.id.recyclerView);
+        tvEmptyProducts = view.findViewById(R.id.tv_empty_products);
         productList = new ArrayList<>();
         productAdapter = new ProductAdapter(getContext(), productList);
 
@@ -113,25 +111,48 @@ public class HomeFragment extends Fragment {
                 new NetworkUtils.Callback<Result<ProductListDTO>>() {
                     @Override
                     public void onSuccess(Result<ProductListDTO> result) {
-                        if (result != null && result.isSuccess() && result.getData() != null) {
-                            productList.clear();
-                            productList.addAll(result.getData().getList());
-                            productAdapter.notifyDataSetChanged();
+                        if (getActivity() == null) return;
+
+                        if (result == null) {
+                            showEmptyProducts("商品返回为空");
+                            return;
                         }
+
+                        if (!result.isSuccess()) {
+                            showEmptyProducts(result.getMsg() != null ? result.getMsg() : "商品加载失败");
+                            return;
+                        }
+
+                        if (result.getData() == null || result.getData().getList() == null || result.getData().getList().isEmpty()) {
+                            showEmptyProducts("暂无商品");
+                            return;
+                        }
+
+                        tvEmptyProducts.setVisibility(View.GONE);
+                        productRecyclerView.setVisibility(View.VISIBLE);
+                        productList.clear();
+                        productList.addAll(result.getData().getList());
+                        productAdapter.notifyDataSetChanged();
                     }
 
                     @Override
                     public void onError(String msg) {
                         if (getActivity() == null) return;
 
-                        Toast.makeText(
-                                getActivity(),
-                                "商品加载失败",
-                                Toast.LENGTH_SHORT
-                        ).show();
+                        showEmptyProducts((msg == null || msg.isEmpty()) ? "商品加载失败" : msg);
                     }
                 }
         );
+    }
+
+    private void showEmptyProducts(String tip) {
+        if (tvEmptyProducts != null) {
+            tvEmptyProducts.setText(tip == null || tip.isEmpty() ? "暂无商品" : tip);
+            tvEmptyProducts.setVisibility(View.VISIBLE);
+        }
+        if (productRecyclerView != null) {
+            productRecyclerView.setVisibility(View.GONE);
+        }
     }
 
     // ================= Banner =================

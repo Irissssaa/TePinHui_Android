@@ -1,6 +1,8 @@
 package com.example.tepinhui.ui.category;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +16,7 @@ import com.example.tepinhui.Result;
 import com.example.tepinhui.dto.ProductDTO;
 import com.example.tepinhui.dto.ProductListDTO;
 import com.example.tepinhui.ui.product.ProductAdapter;
+import com.example.tepinhui.ui.story.ProvinceMapActivity;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -60,6 +63,11 @@ public class CategoryActivity extends AppCompatActivity {
         tabCategory = findViewById(R.id.tab_category);
         recyclerCategory = findViewById(R.id.recycler_category);
         recyclerProducts = findViewById(R.id.recycler_products);
+
+        View mapEntry = findViewById(R.id.iv_map_entry);
+        if (mapEntry != null) {
+            mapEntry.setOnClickListener(v -> startActivity(new Intent(this, ProvinceMapActivity.class)));
+        }
     }
 
     private void initRecyclerView() {

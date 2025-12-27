@@ -48,6 +48,15 @@
             android:textColor="#666666"
             android:padding="8dp"
             android:clickable="true" />
+
+        <!-- 地图入口（右上角） -->
+        <ImageView
+            android:id="@+id/iv_map_entry"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="8dp"
+            android:contentDescription="地图"
+            android:src="@drawable/ic_story" />
     </LinearLayout>
 
     <!-- ===== 内容区：左分类 + 右商品 ===== -->
