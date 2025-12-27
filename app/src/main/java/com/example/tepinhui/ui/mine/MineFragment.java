@@ -21,10 +21,14 @@ import com.example.tepinhui.ui.order.PendingShipmentActivity;
 import com.example.tepinhui.R;
 import com.example.tepinhui.ui.order.RefundActivity;
 import com.example.tepinhui.ui.auth.LoginActivity;
+import com.example.tepinhui.dto.OrderStatsDTO;
 import com.example.tepinhui.dto.UserDTO;
 import com.example.tepinhui.network.UserApiService;
+import com.example.tepinhui.network.OrderApiService;
 import com.example.tepinhui.Result;
 import com.example.tepinhui.NetworkUtils;
+
+import java.util.Map;
 
 public class MineFragment extends Fragment {
 
@@ -251,12 +255,11 @@ public class MineFragment extends Fragment {
             return;
         }
 
-        // 与开发日志一致：/api/user/profile 返回 data = UserDTO
-        UserApiService.getUserInfo(requireContext(), new NetworkUtils.Callback<Result<UserDTO>>() {
+        UserApiService.getProfile(requireContext(), new NetworkUtils.Callback<Result<Map<String, Object>>>() {
             @Override
-            public void onSuccess(Result<UserDTO> result) {
+            public void onSuccess(Result<Map<String, Object>> result) {
                 if (result != null && result.isSuccess() && result.getData() != null) {
-                    updateUserUI(result.getData());
+                    updateProfileUI(result.getData());
                 } else {
                     Toast.makeText(requireContext(),
                             "加载失败: " + (result != null ? result.getMsg() : "未知错误"),
@@ -272,8 +275,10 @@ public class MineFragment extends Fragment {
         });
     }
 
-    private void updateUserUI(UserDTO user) {
+    private void updateProfileUI(Map<String, Object> profileData) {
         try {
+            // 更新用户信息
+            UserDTO user = UserApiService.parseUserInfo(profileData);
             if (user != null) {
                 tvUsername.setText(user.getUsername() != null ? user.getUsername() : "用户");
                 // 显示手机号或用户ID
@@ -285,6 +290,28 @@ public class MineFragment extends Fragment {
                 tvUserId.setText("");
             }
 
+            // 更新订单统计 - 注意：如果布局中没有这些TextView，请注释掉这部分
+            // OrderStatsDTO orderStats = UserApiService.parseOrderStats(profileData);
+            // if (orderStats != null) {
+            //     if (tvOrderUnpaid != null) tvOrderUnpaid.setText(String.valueOf(orderStats.getUnpaid()));
+            //     if (tvOrderUnship != null) tvOrderUnship.setText(String.valueOf(orderStats.getUnship()));
+            //     if (tvOrderShipped != null) tvOrderShipped.setText(String.valueOf(orderStats.getShipped()));
+            //     if (tvOrderUnreview != null) tvOrderUnreview.setText(String.valueOf(orderStats.getUnreview()));
+            //     if (tvOrderRefund != null) tvOrderRefund.setText(String.valueOf(orderStats.getRefund()));
+            // } else {
+            //     if (tvOrderUnpaid != null) tvOrderUnpaid.setText("0");
+            //     if (tvOrderUnship != null) tvOrderUnship.setText("0");
+            //     if (tvOrderShipped != null) tvOrderShipped.setText("0");
+            //     if (tvOrderUnreview != null) tvOrderUnreview.setText("0");
+            //     if (tvOrderRefund != null) tvOrderRefund.setText("0");
+            // }
+
+            // 更新未读消息数量
+            long unreadCount = UserApiService.getUnreadMessageCount(profileData);
+            if (unreadCount > 0) {
+                // 显示消息红点
+                // updateMessageBadge(unreadCount);
+            }
         } catch (Exception e) {
             Log.e("MineFragment", "更新UI出错: " + e.getMessage());
         }

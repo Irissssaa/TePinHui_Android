@@ -77,20 +77,6 @@ public class UserApiService {
     }
 
     /**
-     * 获取用户信息（与开发日志一致：data = {id, phone, username}）
-     */
-    public static void getUserInfo(Context context, NetworkUtils.Callback<Result<UserDTO>> callback) {
-        String token = getToken(context);
-        if (token.isEmpty()) {
-            callback.onError("用户未登录");
-            return;
-        }
-
-        Type responseType = new TypeToken<Result<UserDTO>>(){}.getType();
-        NetworkUtils.get("/api/user/profile", token, responseType, callback);
-    }
-
-    /**
      * 解析聚合数据中的订单统计
      */
     public static OrderStatsDTO parseOrderStats(Map<String, Object> profileData) {

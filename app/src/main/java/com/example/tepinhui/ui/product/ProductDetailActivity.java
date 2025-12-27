@@ -15,7 +15,6 @@ import com.example.tepinhui.NetworkUtils;
 import com.example.tepinhui.R;
 import com.example.tepinhui.Result;
 import com.example.tepinhui.dto.ProductDTO;
-import com.example.tepinhui.network.UserApiService;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -115,8 +114,9 @@ public class ProductDetailActivity extends AppCompatActivity {
     }
 
     private void addToCart() {
-        // 1. 取 token（统一从 UserApiService 读取）
-        String token = UserApiService.getToken(this);
+        // 1. 取 token
+        SharedPreferences sp = getSharedPreferences("user", MODE_PRIVATE);
+        String token = sp.getString("token", null);
 
         if (token == null || token.isEmpty()) {
             Toast.makeText(this, "请先登录", Toast.LENGTH_SHORT).show();
