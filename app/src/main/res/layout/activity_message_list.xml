@@ -8,6 +8,7 @@
 
     <!-- 标题栏 -->
     <LinearLayout
+        android:id="@+id/layout_toolbar"
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:orientation="horizontal"
@@ -19,45 +20,59 @@
             android:id="@+id/iv_back"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/activity"
+            android:src="@drawable/back"
             android:layout_marginEnd="16dp"
             android:clickable="true"
             android:background="?android:attr/selectableItemBackground"/>
 
         <TextView
+            android:id="@+id/tv_toolbar_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="活动优惠"
+            android:text="消息"
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="@android:color/black"/>
 
         <TextView
-            android:id="@+id/tv_manage"
+            android:id="@+id/tv_all_read"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="管理"
+            android:text="全部已读"
             android:textSize="14sp"
-            android:textColor="#666666"
+            android:textColor="#FF4081"
+            android:layout_marginEnd="16dp"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="4dp"
             android:clickable="true"
             android:background="?android:attr/selectableItemBackground"/>
+
+        <ImageView
+            android:id="@+id/iv_setting"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/news"
+            android:clickable="true"
+            android:background="?android:attr/selectableItemBackgroundBorderless"/>
     </LinearLayout>
 
-    <!-- 活动筛选 -->
+    <!-- 消息分类标签 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:orientation="horizontal"
         android:background="#FFFFFF"
         android:layout_marginTop="8dp"
+        android:gravity="center_vertical"
         android:paddingHorizontal="16dp">
 
+        <!-- 物流信息 -->
         <TextView
-            android:id="@+id/tab_all"
+            android:id="@+id/tab_logistics"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="全部"
+            android:text="物流信息"
             android:textSize="14sp"
             android:textColor="#FF4081"
             android:gravity="center"
@@ -65,11 +80,12 @@
             android:clickable="true"
             android:background="?android:attr/selectableItemBackground"/>
 
+        <!-- 活动优惠 -->
         <TextView
-            android:id="@+id/tab_ongoing"
+            android:id="@+id/tab_promotion"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="进行中"
+            android:text="活动优惠"
             android:textSize="14sp"
             android:textColor="#666666"
             android:gravity="center"
@@ -77,24 +93,31 @@
             android:clickable="true"
             android:background="?android:attr/selectableItemBackground"/>
 
+        <!-- 点赞消息 -->
         <TextView
-            android:id="@+id/tab_expired"
+            android:id="@+id/tab_like"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="已过期"
+            android:text="点赞消息"
             android:textSize="14sp"
             android:textColor="#666666"
             android:gravity="center"
             android:paddingHorizontal="12dp"
             android:clickable="true"
             android:background="?android:attr/selectableItemBackground"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
     </LinearLayout>
 
-    <!-- 活动列表 -->
+    <!-- 消息列表 -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_promotion_list"
+        android:id="@+id/rv_messages"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:layout_marginTop="8dp"
         android:padding="8dp"/>
 
@@ -110,15 +133,23 @@
         <ImageView
             android:layout_width="120dp"
             android:layout_height="120dp"
-            android:src="@drawable/ic_weixin_new"
+            android:src="@drawable/news"
             android:layout_marginBottom="16dp"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="暂无活动优惠"
+            android:text="暂无消息"
             android:textSize="16sp"
             android:textColor="#999999"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="快去和朋友们互动吧"
+            android:textSize="14sp"
+            android:textColor="#CCCCCC"/>
     </LinearLayout>
 
 </LinearLayout>

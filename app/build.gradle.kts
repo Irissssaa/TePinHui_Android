@@ -42,6 +42,7 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 
     // 图片加载库 - 只保留一个（建议保留 Glide）
     implementation("com.github.bumptech.glide:glide:4.15.1")

@@ -26,6 +26,16 @@
         </activity>
 
         <activity
+            android:name=".ui.message.MessageListActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".ui.message.MessageSearchActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity
+            android:name=".ui.message.MessageSettingActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+
+        <activity
             android:name=".ui.category.CategoryActivity"
             android:exported="false" />
 
@@ -82,10 +92,6 @@
         <activity android:name=".PromotionInfoActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity android:name=".ui.mine.LikeInfoActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".ui.message.MessageSettingActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".ui.message.MessageSearchActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
     </application>
