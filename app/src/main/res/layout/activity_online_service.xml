@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#f5f5f5"
+    android:background="#FFFFFF"
     android:fitsSystemWindows="true">
 
     <!-- 标题栏 -->
@@ -13,170 +13,115 @@
         android:orientation="horizontal"
         android:background="#FFFFFF"
         android:gravity="center_vertical"
-        android:paddingHorizontal="16dp">
+        android:paddingHorizontal="16dp"
+        android:elevation="4dp">
 
         <ImageView
             android:id="@+id/iv_back"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/service_center"
+            android:src="@drawable/back"
             android:layout_marginEnd="16dp"/>
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="服务中心"
+            android:text="在线客服"
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="@android:color/black"/>
+
+        <TextView
+            android:id="@+id/tv_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="更多"
+            android:textSize="14sp"
+            android:textColor="#666666"/>
     </LinearLayout>
 
-    <!-- 搜索栏 -->
+    <!-- 客服头像和信息 -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#F5F5F5"
+        android:padding="16dp">
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/online_service"
+            android:layout_marginEnd="12dp"/>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="在线客服"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="工作时间：9:00-21:00"
+                android:textSize="12sp"
+                android:textColor="#666666"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_service_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="在线"
+            android:textSize="12sp"
+            android:textColor="#4CAF50"/>
+    </LinearLayout>
+
+    <!-- 消息列表 -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_messages"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="8dp"/>
+
+    <!-- 输入区域 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="#FFFFFF"
-        android:layout_marginTop="8dp"
-        android:gravity="center_vertical"
-        android:paddingHorizontal="16dp">
+        android:padding="12dp"
+        android:elevation="4dp">
 
         <EditText
-            android:id="@+id/et_search"
+            android:id="@+id/et_input"
             android:layout_width="0dp"
-            android:layout_height="40dp"
+            android:layout_height="48dp"
             android:layout_weight="1"
-            android:hint="输入您想了解的问题"
+            android:hint="请输入您的问题..."
             android:textSize="14sp"
             android:paddingHorizontal="16dp"
-            android:background="#F5F5F5"
-            android:drawablePadding="8dp"/>
+            android:background="#F5F5F5"/>
 
-        <TextView
-            android:id="@+id/tv_search"
+        <Button
+            android:id="@+id/btn_send"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="搜索"
+            android:layout_height="48dp"
+            android:layout_marginStart="12dp"
+            android:text="发送"
             android:textSize="14sp"
-            android:textColor="#FF4081"
-            android:layout_marginStart="12dp"/>
-    </LinearLayout>
-
-    <!-- 常见问题分类 -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="#FFFFFF"
-        android:layout_marginTop="8dp"
-        android:padding="16dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="常见问题"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/black"
-            android:layout_marginBottom="16dp"/>
-
-        <!-- 订单问题 -->
-        <LinearLayout
-            android:id="@+id/layout_order_qa"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingVertical="12dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="订单问题"
-                android:textSize="14sp"
-                android:textColor="#333333"/>
-
-        </LinearLayout>
-
-        <!-- 支付问题 -->
-        <LinearLayout
-            android:id="@+id/layout_payment_qa"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingVertical="12dp">
-
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="支付问题"
-                android:textSize="14sp"
-                android:textColor="#333333"/>
-
-        </LinearLayout>
-
-        <!-- 配送问题 -->
-        <LinearLayout
-            android:id="@+id/layout_delivery_qa"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingVertical="12dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="配送问题"
-                android:textSize="14sp"
-                android:textColor="#333333"/>
-
-        </LinearLayout>
-
-        <!-- 售后问题 -->
-        <LinearLayout
-            android:id="@+id/layout_after_sale_qa"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:paddingVertical="12px">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="售后问题"
-                android:textSize="14sp"
-                android:textColor="#333333"/>
-
-        </LinearLayout>
-    </LinearLayout>
-
-    <!-- 联系客服 -->
-    <LinearLayout
-        android:id="@+id/layout_contact_service"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="#FFFFFF"
-        android:layout_marginTop="8dp"
-        android:gravity="center_vertical"
-        android:padding="16dp">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="联系在线客服"
-            android:textSize="14sp"
-            android:textColor="#333333"/>
-
+            android:textColor="#FFFFFF"
+            android:background="#FF4081"
+            android:paddingHorizontal="24dp"/>
     </LinearLayout>
 </LinearLayout>

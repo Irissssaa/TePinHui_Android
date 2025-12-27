@@ -421,13 +421,33 @@
                         android:textColor="#666666"/>
                 </LinearLayout>
 
-                <!-- 占位 -->
-                <View
+                <!-- 退出登录 -->
+                <LinearLayout
+                    android:id="@+id/layout_logout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"/>
+                    android:layout_weight="1"
+                    android:focusable="true"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:clickable="true"
+                    android:background="?android:attr/selectableItemBackground">
 
-                <!-- 占位 -->
+                    <ImageView
+                        android:id="@+id/iv_logout"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/back"
+                        android:layout_marginBottom="4dp"/>
+
+                    <TextView
+                        android:id="@+id/tv_logout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="退出登录"
+                        android:textSize="12sp"
+                        android:textColor="#666666"/>
+                </LinearLayout>
                 <View
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

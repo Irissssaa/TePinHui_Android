@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.example.tepinhui.ui.order.AllOrdersActivity;
@@ -27,7 +28,9 @@ import com.example.tepinhui.network.UserApiService;
 import com.example.tepinhui.network.OrderApiService;
 import com.example.tepinhui.Result;
 import com.example.tepinhui.NetworkUtils;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.Map;
 
 public class MineFragment extends Fragment {
@@ -45,12 +48,15 @@ public class MineFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_mine, container, false);
+        View view = inflater.inflate(R.layout.fragment_mine, container, false);
+        Log.d("MineFragment", "onCreateView: 创建视图");
+        return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Log.d("MineFragment", "onViewCreated: 视图已创建");
 
         initViews(view);
         initClickListeners(view);
@@ -59,6 +65,7 @@ public class MineFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        Log.d("MineFragment", "onResume: 刷新数据");
         // 每次回到页面时刷新数据
         loadUserProfile();
     }
@@ -68,20 +75,14 @@ public class MineFragment extends Fragment {
             // 用户信息区域
             layoutUserInfo = view.findViewById(R.id.layout_user_info);
             tvUsername = view.findViewById(R.id.tv_username);
-            tvUserId = view.findViewById(R.id.tv_user_id); // 使用tv_user_id而不是tv_phone
+            tvUserId = view.findViewById(R.id.tv_user_id);
 
-            // 由于布局中没有显示订单数量的TextView，我们先不使用这些变量
-            // 如果你需要显示订单数量，需要在布局中添加对应的TextView
-            // tvOrderUnpaid = view.findViewById(R.id.tv_order_unpaid);
-            // tvOrderUnship = view.findViewById(R.id.tv_order_unship);
-            // tvOrderShipped = view.findViewById(R.id.tv_order_shipped);
-            // tvOrderUnreview = view.findViewById(R.id.tv_order_unreview);
-            // tvOrderRefund = view.findViewById(R.id.tv_order_refund);
+            Log.d("MineFragment", "初始化视图完成");
 
             // 加载用户数据
             loadUserProfile();
         } catch (Exception e) {
-            Log.e("MineFragment", "初始化视图出错: " + e.getMessage());
+            Log.e("MineFragment", "初始化视图出错: " + e.getMessage(), e);
         }
     }
 
@@ -90,12 +91,13 @@ public class MineFragment extends Fragment {
             // 1. 用户信息区域点击事件（登录/个人资料）
             if (layoutUserInfo != null) {
                 layoutUserInfo.setOnClickListener(v -> {
+                    Log.d("MineFragment", "点击用户信息区域");
                     if (UserApiService.isLoggedIn(requireContext())) {
-                        // 已登录，跳转到个人资料页面
-                        Toast.makeText(getContext(), "查看个人资料", Toast.LENGTH_SHORT).show();
-                        // navigateToActivity(UserProfileActivity.class);
+                        // 已登录，显示退出登录对话框
+                        showLogoutDialog();
                     } else {
                         // 未登录，跳转到登录页面
+                        Log.d("MineFragment", "用户未登录，跳转到登录页面");
                         navigateToActivity(LoginActivity.class);
                     }
                 });
@@ -229,46 +231,128 @@ public class MineFragment extends Fragment {
                 });
             }
 
-            // 13. 推荐商品点击
-            View layoutProduct1 = view.findViewById(R.id.layout_product_1);
-            if (layoutProduct1 != null) {
-                layoutProduct1.setOnClickListener(v -> {
-                    Toast.makeText(getContext(), "查看推荐商品1", Toast.LENGTH_SHORT).show();
+            // 13. 退出登录按钮
+            View layoutLogout = view.findViewById(R.id.layout_logout);
+            if (layoutLogout != null) {
+                layoutLogout.setOnClickListener(v -> {
+                    Log.d("MineFragment", "点击：退出登录");
+                    if (UserApiService.isLoggedIn(requireContext())) {
+                        showLogoutDialog();
+                    } else {
+                        Toast.makeText(getContext(), "您尚未登录", Toast.LENGTH_SHORT).show();
+                        navigateToActivity(LoginActivity.class);
+                    }
                 });
             }
 
-            View layoutProduct2 = view.findViewById(R.id.layout_product_2);
-            if (layoutProduct2 != null) {
-                layoutProduct2.setOnClickListener(v -> {
-                    Toast.makeText(getContext(), "查看推荐商品2", Toast.LENGTH_SHORT).show();
-                });
-            }
         } catch (Exception e) {
-            Log.e("MineFragment", "初始化点击监听器时出错: " + e.getMessage());
+            Log.e("MineFragment", "初始化点击监听器时出错: " + e.getMessage(), e);
             Toast.makeText(getContext(), "功能初始化异常", Toast.LENGTH_SHORT).show();
         }
     }
 
+    /**
+     * 显示退出登录确认对话框
+     */
+    private void showLogoutDialog() {
+        if (getActivity() == null) return;
+
+        new AlertDialog.Builder(requireContext())
+                .setTitle("退出登录")
+                .setMessage("确定要退出当前账号吗？")
+                .setPositiveButton("确定", (dialog, which) -> {
+                    logout();
+                })
+                .setNegativeButton("取消", null)
+                .show();
+    }
+
+    /**
+     * 执行退出登录操作
+     */
+    private void logout() {
+        Log.d("MineFragment", "开始退出登录");
+
+        UserApiService.logout(requireContext(), new NetworkUtils.Callback<Result<Void>>() {
+            @Override
+            public void onSuccess(Result<Void> result) {
+                Log.d("MineFragment", "退出登录成功: " + result.getMsg());
+
+                // 更新UI显示
+                showLoginUI();
+
+                // 显示提示
+                if (getContext() != null) {
+                    Toast.makeText(getContext(), "退出登录成功", Toast.LENGTH_SHORT).show();
+                }
+
+                // 可选：跳转到登录页面
+                // navigateToActivity(LoginActivity.class);
+
+                // 可选：刷新页面数据
+                loadUserProfile();
+            }
+
+            @Override
+            public void onError(String msg) {
+                Log.e("MineFragment", "退出登录失败: " + msg);
+
+                // 即使网络请求失败，本地数据也会被清除，所以还是要更新UI
+                showLoginUI();
+
+                if (getContext() != null) {
+                    Toast.makeText(getContext(), "已清除本地登录状态", Toast.LENGTH_SHORT).show();
+                }
+
+                // 刷新页面数据
+                loadUserProfile();
+            }
+        });
+    }
+
     private void loadUserProfile() {
-        if (!UserApiService.isLoggedIn(requireContext())) {
+        Log.d("MineFragment", "loadUserProfile: 开始加载用户信息");
+
+        // 先检查登录状态
+        boolean isLoggedIn = UserApiService.isLoggedIn(requireContext());
+        Log.d("MineFragment", "登录状态: " + (isLoggedIn ? "已登录" : "未登录"));
+
+        if (!isLoggedIn) {
             showLoginUI();
             return;
         }
 
+        // 显示加载中的状态
+        tvUsername.setText("加载中...");
+        tvUserId.setText("正在获取用户信息...");
+
         UserApiService.getProfile(requireContext(), new NetworkUtils.Callback<Result<Map<String, Object>>>() {
             @Override
             public void onSuccess(Result<Map<String, Object>> result) {
+                Log.d("MineFragment", "获取用户信息成功: " + (result != null ? result.getMsg() : "null"));
+
                 if (result != null && result.isSuccess() && result.getData() != null) {
                     updateProfileUI(result.getData());
                 } else {
+                    String errorMsg = result != null ? result.getMsg() : "未知错误";
+                    Log.e("MineFragment", "获取用户信息失败: " + errorMsg);
+
                     Toast.makeText(requireContext(),
-                            "加载失败: " + (result != null ? result.getMsg() : "未知错误"),
+                            "加载失败: " + errorMsg,
                             Toast.LENGTH_SHORT).show();
+
+                    // 如果token失效，清除登录状态
+                    if ("无效的token".equals(errorMsg) || "请先登录".equals(errorMsg)) {
+                        Log.d("MineFragment", "token失效，清除登录状态");
+                        UserApiService.clearUserInfo(requireContext());
+                        showLoginUI();
+                    }
                 }
             }
 
             @Override
             public void onError(String msg) {
+                Log.e("MineFragment", "网络错误: " + msg);
                 Toast.makeText(requireContext(), "网络错误: " + msg, Toast.LENGTH_SHORT).show();
                 showLoginUI(); // 如果网络错误，也显示登录UI
             }
@@ -277,60 +361,43 @@ public class MineFragment extends Fragment {
 
     private void updateProfileUI(Map<String, Object> profileData) {
         try {
+            Log.d("MineFragment", "updateProfileUI: 更新UI，数据大小: " + profileData.size());
+
             // 更新用户信息
             UserDTO user = UserApiService.parseUserInfo(profileData);
             if (user != null) {
-                tvUsername.setText(user.getUsername() != null ? user.getUsername() : "用户");
+                String username = user.getUsername() != null ? user.getUsername() : "用户";
+                tvUsername.setText(username);
+
                 // 显示手机号或用户ID
                 String displayText = user.getPhone() != null ? user.getPhone() :
                         (user.getId() != null ? "ID: " + user.getId() : "");
                 tvUserId.setText(displayText);
+
+                Log.d("MineFragment", "用户信息: " + username + ", " + displayText);
             } else {
                 tvUsername.setText("用户");
                 tvUserId.setText("");
+                Log.e("MineFragment", "解析用户信息失败，user为null");
             }
-
-            // 更新订单统计 - 注意：如果布局中没有这些TextView，请注释掉这部分
-            // OrderStatsDTO orderStats = UserApiService.parseOrderStats(profileData);
-            // if (orderStats != null) {
-            //     if (tvOrderUnpaid != null) tvOrderUnpaid.setText(String.valueOf(orderStats.getUnpaid()));
-            //     if (tvOrderUnship != null) tvOrderUnship.setText(String.valueOf(orderStats.getUnship()));
-            //     if (tvOrderShipped != null) tvOrderShipped.setText(String.valueOf(orderStats.getShipped()));
-            //     if (tvOrderUnreview != null) tvOrderUnreview.setText(String.valueOf(orderStats.getUnreview()));
-            //     if (tvOrderRefund != null) tvOrderRefund.setText(String.valueOf(orderStats.getRefund()));
-            // } else {
-            //     if (tvOrderUnpaid != null) tvOrderUnpaid.setText("0");
-            //     if (tvOrderUnship != null) tvOrderUnship.setText("0");
-            //     if (tvOrderShipped != null) tvOrderShipped.setText("0");
-            //     if (tvOrderUnreview != null) tvOrderUnreview.setText("0");
-            //     if (tvOrderRefund != null) tvOrderRefund.setText("0");
-            // }
 
             // 更新未读消息数量
             long unreadCount = UserApiService.getUnreadMessageCount(profileData);
-            if (unreadCount > 0) {
-                // 显示消息红点
-                // updateMessageBadge(unreadCount);
-            }
+            Log.d("MineFragment", "未读消息数量: " + unreadCount);
+
         } catch (Exception e) {
-            Log.e("MineFragment", "更新UI出错: " + e.getMessage());
+            Log.e("MineFragment", "更新UI出错: " + e.getMessage(), e);
         }
     }
 
     private void showLoginUI() {
+        Log.d("MineFragment", "showLoginUI: 显示登录UI");
         if (tvUsername != null) {
             tvUsername.setText("点击登录");
         }
         if (tvUserId != null) {
             tvUserId.setText("登录后查看更多");
         }
-
-        // 重置订单数量 - 如果使用了订单数量TextView，需要重置
-        // if (tvOrderUnpaid != null) tvOrderUnpaid.setText("0");
-        // if (tvOrderUnship != null) tvOrderUnship.setText("0");
-        // if (tvOrderShipped != null) tvOrderShipped.setText("0");
-        // if (tvOrderUnreview != null) tvOrderUnreview.setText("0");
-        // if (tvOrderRefund != null) tvOrderRefund.setText("0");
     }
 
     private boolean checkLogin() {
@@ -352,7 +419,7 @@ public class MineFragment extends Fragment {
                 Toast.makeText(getContext(), "跳转失败，请重试", Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
-            Log.e("MineFragment", "跳转失败: " + e.getMessage());
+            Log.e("MineFragment", "跳转失败: " + e.getMessage(), e);
             if (e instanceof android.content.ActivityNotFoundException) {
                 Toast.makeText(getContext(), "目标页面不存在，请检查Activity是否已创建", Toast.LENGTH_LONG).show();
             } else {
