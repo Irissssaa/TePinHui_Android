@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5">
+    android:background="#F5F5F5"
+    android:fitsSystemWindows="true">
 
     <!-- ===== 可滚动内容 ===== -->
     <androidx.core.widget.NestedScrollView
@@ -57,6 +58,17 @@
                     android:layout_marginTop="4dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/tv_short_intro"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textSize="14sp"
+                    android:textColor="#333333"
+                    android:lineSpacingExtra="4dp"
+                    android:visibility="gone"/>
+
 
                 <!-- 标签区（写死也没问题） -->
                 <LinearLayout
@@ -112,6 +124,17 @@
                     android:textSize="14sp"
                     android:textColor="#555555"
                     android:layout_marginTop="8dp"/>
+
+                <TextView
+                    android:id="@+id/tv_culture_note"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:textSize="14sp"
+                    android:textColor="#666666"
+                    android:lineSpacingExtra="6dp"
+                    android:visibility="gone"/>
+
             </LinearLayout>
 
             <!-- ===== 特产故事入口（重点） ===== -->
@@ -124,7 +147,8 @@
                 android:background="#FFFFFF"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:clickable="true">
+                android:clickable="true"
+                android:visibility="gone" >
 
                 <TextView
                     android:text="📖 特产故事"
@@ -187,7 +211,7 @@
             android:id="@+id/btn_buy"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:text="立即购买"
+            android:text="加入购物车"
             android:backgroundTint="#7C4DFF"
             android:textColor="#FFFFFF"/>
     </LinearLayout>

@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:padding="24dp"
     android:background="#FFFFFF"
-    tools:context=".ui.auth.RegisterActivity">
+    tools:context=".ui.auth.RegisterActivity"
+    android:fitsSystemWindows="true">
 
     <TextView
         android:id="@+id/tv_title"

@@ -62,6 +62,17 @@
         <!-- 购物车界面 -->
         <activity android:name=".ui.cart.CartActivity" />
 
+        <!-- 特产故事界面 -->
+        <activity android:name=".ui.story.StoryDetailActivity" />
+        <activity android:name=".ui.story.StoryListActivity" />
+
+        <!-- 社区相关界面 -->
+        <activity android:name=".ui.community.PostPublishActivity" />
+        <activity
+            android:name=".ui.community.PostDetailActivity"
+            android:exported="false" />
+        <activity android:name=".ui.community.HelpDetailActivity" />
+
         <!-- 我的页面相关Activity -->
         <activity android:name=".ui.order.AllOrdersActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />

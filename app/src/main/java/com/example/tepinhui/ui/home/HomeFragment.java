@@ -23,6 +23,7 @@ import com.example.tepinhui.ui.product.ProductAdapter;
 import com.example.tepinhui.dto.BannerDTO;
 import com.example.tepinhui.dto.ProductDTO;
 import com.example.tepinhui.dto.ProductListDTO;
+import com.example.tepinhui.ui.story.StoryListActivity;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -74,7 +75,7 @@ public class HomeFragment extends Fragment {
         });
 
         btnStory.setOnClickListener(v -> {
-            startActivity(new Intent(getContext(), CategoryActivity.class));
+            startActivity(new Intent(getContext(), StoryListActivity.class));
         });
 
         // ---------- Banner 初始化 ----------

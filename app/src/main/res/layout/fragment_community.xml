@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -7,21 +7,39 @@
     android:background="#FFFFFF"
     android:fitsSystemWindows="true">
 
-    <!-- 社区顶部标签 -->
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:tabIndicatorColor="#FF4081"
-        app:tabSelectedTextColor="#FF4081"
-        app:tabTextColor="#666666" />
-
-    <!-- 模拟社区内容区域 -->
-    <TextView
-        android:id="@+id/tvCommunityContent"
+    <!-- ===== 主内容区 ===== -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="正在加载社区内容..."
-        android:textSize="16sp" />
-</LinearLayout>
+        android:orientation="vertical">
+
+        <!-- Tab 标题 -->
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabIndicatorColor="#FF4081"
+            app:tabSelectedTextColor="#FF4081"
+            app:tabTextColor="#666666" />
+
+        <!-- ★★ 真正的社区内容容器 ★★ -->
+        <FrameLayout
+            android:id="@+id/community_container"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+    <!-- ===== 发帖 FloatingActionButton ===== -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_post"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:contentDescription="发帖"
+        app:srcCompat="@drawable/ic_add"
+        app:backgroundTint="#FF4081" />
+
+</FrameLayout>

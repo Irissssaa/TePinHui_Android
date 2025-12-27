@@ -2,8 +2,10 @@ package com.example.tepinhui.ui.product;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +31,9 @@ public class ProductDetailActivity extends AppCompatActivity {
     private TextView tvPrice;
     private TextView tvMeta;
     private TextView tvOrigin;
+    private TextView tvShortIntro;
+    private TextView tvCultureNote;
+    private LinearLayout layoutStoryEntry;
     private Button btnBuy;
 
     private int productId;
@@ -38,7 +43,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_detail);
 
-        // 1) 取 id
+        // 1) 取 productId
         productId = getIntent().getIntExtra("productId", -1);
         if (productId <= 0) {
             Toast.makeText(this, "商品参数错误", Toast.LENGTH_SHORT).show();
@@ -52,15 +57,20 @@ public class ProductDetailActivity extends AppCompatActivity {
         tvPrice = findViewById(R.id.tv_price);
         tvMeta = findViewById(R.id.tv_meta);
         tvOrigin = findViewById(R.id.tv_origin);
-        tvOrigin = findViewById(R.id.tv_origin);
+        tvShortIntro = findViewById(R.id.tv_short_intro);
+        tvCultureNote = findViewById(R.id.tv_culture_note);
+        layoutStoryEntry = findViewById(R.id.layout_story_entry);
         btnBuy = findViewById(R.id.btn_buy);
 
-        // 3) 按钮
-        btnBuy.setOnClickListener(v -> {
-            addToCart();
-        });
+        // 3) 加入购物车
+        btnBuy.setOnClickListener(v -> addToCart());
 
-        // 4) 拉取详情
+        // 4) 特产故事入口（先占位）
+        layoutStoryEntry.setOnClickListener(v ->
+                Toast.makeText(this, "特产故事即将上线", Toast.LENGTH_SHORT).show()
+        );
+
+        // 5) 拉取详情
         loadProductDetail(productId);
     }
 
@@ -76,45 +86,69 @@ public class ProductDetailActivity extends AppCompatActivity {
                         if (result != null && result.isSuccess() && result.getData() != null) {
                             bindProduct(result.getData());
                         } else {
-                            Toast.makeText(ProductDetailActivity.this,
+                            Toast.makeText(
+                                    ProductDetailActivity.this,
                                     result != null ? result.getMsg() : "加载失败",
-                                    Toast.LENGTH_SHORT).show();
+                                    Toast.LENGTH_SHORT
+                            ).show();
                         }
                     }
 
                     @Override
                     public void onError(String msg) {
-                        Toast.makeText(ProductDetailActivity.this,
+                        Toast.makeText(
+                                ProductDetailActivity.this,
                                 "加载失败：" + msg,
-                                Toast.LENGTH_SHORT).show();
+                                Toast.LENGTH_SHORT
+                        ).show();
                     }
                 }
         );
     }
 
     private void bindProduct(ProductDTO p) {
-        // 如果你的 ProductDTO 是 public field，请把 p.getXxx() 改成 p.xxx
 
         tvName.setText(p.getName());
-
-        // 价格格式化：¥29.90
         tvPrice.setText(String.format(Locale.CHINA, "¥%.2f", p.getPrice()));
 
-        String origin = p.getOrigin();
-        if (origin == null || origin.trim().isEmpty()) {
+        // meta：产地 + 销量
+        if (p.getOrigin() == null || p.getOrigin().trim().isEmpty()) {
             tvMeta.setText("已售 " + p.getSales());
         } else {
-            tvMeta.setText(origin + " · 已售 " + p.getSales());
+            tvMeta.setText(p.getOrigin() + " · 已售 " + p.getSales());
         }
 
+        // 商品主图
         Glide.with(this)
                 .load(p.getImageUrl())
                 .placeholder(R.drawable.ic_launcher_foreground)
                 .into(ivProductImage);
+
+        // ===== 简短介绍 =====
+        if (p.getShortIntro() != null && !p.getShortIntro().isEmpty()) {
+            tvShortIntro.setText(p.getShortIntro());
+            tvShortIntro.setVisibility(View.VISIBLE);
+        } else {
+            tvShortIntro.setVisibility(View.GONE);
+        }
+
+        // ===== 产地 / 文化说明 =====
+        if (p.getCultureNote() != null && !p.getCultureNote().isEmpty()) {
+            tvCultureNote.setText(p.getCultureNote());
+            tvCultureNote.setVisibility(View.VISIBLE);
+        } else {
+            tvCultureNote.setVisibility(View.GONE);
+        }
+
+        // ===== 特产故事入口 =====
+        if (p.getStoryId() != null) {
+            layoutStoryEntry.setVisibility(View.VISIBLE);
+        } else {
+            layoutStoryEntry.setVisibility(View.GONE);
+        }
     }
 
     private void addToCart() {
-        // 1. 取 token
         SharedPreferences sp = getSharedPreferences("user", MODE_PRIVATE);
         String token = sp.getString("token", null);
 
@@ -123,38 +157,42 @@ public class ProductDetailActivity extends AppCompatActivity {
             return;
         }
 
-        // 2. 构造请求体
         Map<String, Object> body = new HashMap<>();
         body.put("productId", productId);
         body.put("quantity", 1);
 
         Type type = new TypeToken<Result<Object>>() {}.getType();
 
-        // 3. 调用接口
         NetworkUtils.post(
                 "/api/cart/items",
                 body,
-                token,   // Authorization: Bearer token
+                token,
                 type,
                 new NetworkUtils.Callback<Result<Object>>() {
                     @Override
                     public void onSuccess(Result<Object> result) {
                         if (result != null && result.isSuccess()) {
-                            Toast.makeText(ProductDetailActivity.this,
+                            Toast.makeText(
+                                    ProductDetailActivity.this,
                                     "已加入购物车",
-                                    Toast.LENGTH_SHORT).show();
+                                    Toast.LENGTH_SHORT
+                            ).show();
                         } else {
-                            Toast.makeText(ProductDetailActivity.this,
+                            Toast.makeText(
+                                    ProductDetailActivity.this,
                                     result != null ? result.getMsg() : "加入失败",
-                                    Toast.LENGTH_SHORT).show();
+                                    Toast.LENGTH_SHORT
+                            ).show();
                         }
                     }
 
                     @Override
                     public void onError(String msg) {
-                        Toast.makeText(ProductDetailActivity.this,
+                        Toast.makeText(
+                                ProductDetailActivity.this,
                                 "加入购物车失败：" + msg,
-                                Toast.LENGTH_SHORT).show();
+                                Toast.LENGTH_SHORT
+                        ).show();
                     }
                 }
         );
