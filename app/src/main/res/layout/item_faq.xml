@@ -8,7 +8,8 @@
     android:padding="16dp"
     android:layout_marginBottom="8dp"
     android:clickable="true"
-    android:focusable="true">
+    android:focusable="true"
+    android:fitsSystemWindows="true">
 
     <!-- 问题和展开图标 -->
     <LinearLayout

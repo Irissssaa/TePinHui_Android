@@ -7,4 +7,5 @@
     android:text="分类名"
     android:textSize="14sp"
     android:textColor="#333333"
-    android:background="#F5F5F5" />
+    android:background="#F5F5F5"
+    android:fitsSystemWindows="true"/>
