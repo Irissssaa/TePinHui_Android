@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tepinhui.R;
 import com.example.tepinhui.dto.ProductDTO;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide; // 改为 Glide
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -37,7 +37,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
         this.listener = listener;
     }
 
-    public FavoriteAdapter(FavoriteActivity favoriteActivity, List<ProductDTO> favoriteList, boolean isEditMode) {
+    public FavoriteAdapter(FavoriteActivity favoriteActivity, List<ProductDTO> favoriteList, boolean isEditMode) { // 移除 FavoriteActivity 参数
         this.favoriteList = favoriteList;
         this.isEditMode = isEditMode;
         this.selectedPositions = new HashSet<>();
@@ -60,9 +60,9 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
         holder.tvType.setText(item.getOrigin() != null ? item.getOrigin() : "特产");
         holder.tvRating.setText(String.format("¥%.2f", item.getPrice()));
 
-        // 使用 Picasso 加载图片
+        // 使用 Glide 加载图片（已存在于依赖中）
         if (item.getImageUrl() != null && !item.getImageUrl().isEmpty()) {
-            Picasso.get()
+            Glide.with(holder.ivImage.getContext())
                     .load(item.getImageUrl())
                     .placeholder(R.drawable.ic_weixin_new) // 默认图片
                     .error(R.drawable.ic_weixin_new)

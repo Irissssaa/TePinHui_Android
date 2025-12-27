@@ -3,6 +3,7 @@ package com.example.tepinhui.ui.mine;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -35,14 +36,18 @@ public class FaqAdapter extends RecyclerView.Adapter<FaqAdapter.ViewHolder> {
         holder.tvQuestion.setText(faq.getQuestion());
         holder.tvAnswer.setText(faq.getAnswer());
 
+        // 初始状态：答案隐藏，显示向下箭头
+        holder.tvAnswer.setVisibility(View.GONE);
+        holder.ivExpand.setImageResource(R.drawable.ic_expand_more);
+
         // 点击展开/收起答案
         holder.itemView.setOnClickListener(v -> {
             if (holder.tvAnswer.getVisibility() == View.VISIBLE) {
                 holder.tvAnswer.setVisibility(View.GONE);
-                holder.tvExpand.setText("展开");
+                holder.ivExpand.setImageResource(R.drawable.ic_expand_more);
             } else {
                 holder.tvAnswer.setVisibility(View.VISIBLE);
-                holder.tvExpand.setText("收起");
+                holder.ivExpand.setImageResource(R.drawable.ic_expand_less);
             }
         });
     }
@@ -53,13 +58,14 @@ public class FaqAdapter extends RecyclerView.Adapter<FaqAdapter.ViewHolder> {
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvQuestion, tvAnswer, tvExpand;
+        TextView tvQuestion, tvAnswer;
+        ImageView ivExpand;
 
         ViewHolder(View view) {
             super(view);
             tvQuestion = view.findViewById(R.id.tv_question);
             tvAnswer = view.findViewById(R.id.tv_answer);
-            tvExpand = view.findViewById(R.id.tv_expand);
+            ivExpand = view.findViewById(R.id.iv_expand);
         }
     }
 }

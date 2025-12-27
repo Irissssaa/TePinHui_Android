@@ -18,5 +18,5 @@ dependencyResolutionManagement {
         maven { url = uri("https://jitpack.io") }
     }
 }
-rootProject.name = "TePinhui" // 这里保持你原来的项目名，如果不对请手动改一下
+rootProject.name = "TePinhui"
 include(":app")

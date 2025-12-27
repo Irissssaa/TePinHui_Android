@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tepinhui.R;
 import com.example.tepinhui.dto.ProductDTO;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide; // 改为 Glide
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -65,9 +65,9 @@ public class FootprintAdapter extends RecyclerView.Adapter<FootprintAdapter.View
         String viewTime = sdf.format(new Date());
         holder.tvViewTime.setText(viewTime);
 
-        // 加载图片
+        // 加载图片 - 使用 Glide
         if (item.getImageUrl() != null && !item.getImageUrl().isEmpty()) {
-            Picasso.get()
+            Glide.with(holder.ivProduct.getContext())
                     .load(item.getImageUrl())
                     .placeholder(R.drawable.ic_weixin_new)
                     .error(R.drawable.ic_weixin_new)
