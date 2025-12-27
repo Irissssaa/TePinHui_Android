@@ -5,12 +5,16 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tepinhui.R;
+import com.example.tepinhui.dto.ProductDTO;
+import com.example.tepinhui.network.FavoriteApiService;
+import com.example.tepinhui.network.UserApiService;
+import com.example.tepinhui.Result;
+import com.example.tepinhui.NetworkUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +26,7 @@ public class FavoriteActivity extends AppCompatActivity {
     private RecyclerView rvFavorites;
     private LinearLayout layoutEmpty;
     private FavoriteAdapter adapter;
-    private List<FavoriteItem> favoriteList;
+    private List<ProductDTO> favoriteList;
     private boolean isEditMode = false;
 
     @Override
@@ -32,12 +36,17 @@ public class FavoriteActivity extends AppCompatActivity {
 
         initViews();
         setupListeners();
-        initData();
         setupRecyclerView();
 
         // 默认选中全部
         selectTab(0);
-        loadDataByCategory("all");
+        loadFavorites();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadFavorites();
     }
 
     private void initViews() {
@@ -50,6 +59,8 @@ public class FavoriteActivity extends AppCompatActivity {
 
         // 返回按钮
         findViewById(R.id.iv_back).setOnClickListener(v -> finish());
+
+        favoriteList = new ArrayList<>();
     }
 
     private void setupListeners() {
@@ -59,25 +70,22 @@ public class FavoriteActivity extends AppCompatActivity {
         // 分类标签点击
         tabAll.setOnClickListener(v -> {
             selectTab(0);
-            loadDataByCategory("all");
+            loadFavorites();
         });
 
         tabProducts.setOnClickListener(v -> {
             selectTab(1);
-            loadDataByCategory("products");
+            loadFavorites();
         });
 
         tabShops.setOnClickListener(v -> {
             selectTab(2);
-            loadDataByCategory("shops");
+            loadFavorites();
         });
     }
 
     private void selectTab(int position) {
-        // 重置所有标签颜色
         resetTabColors();
-
-        // 设置选中标签颜色
         int selectedColor = getResources().getColor(R.color.red_primary);
 
         switch (position) {
@@ -100,20 +108,58 @@ public class FavoriteActivity extends AppCompatActivity {
         tabShops.setTextColor(normalColor);
     }
 
-    private void loadDataByCategory(String category) {
-        // 清空列表
-        favoriteList.clear();
+    private void loadFavorites() {
+        if (!UserApiService.isLoggedIn(this)) {
+            Toast.makeText(this, "请先登录", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
 
-        // 更新UI
-        updateUI();
-    }
+        FavoriteApiService.getFavorites(this, new NetworkUtils.Callback<Result<List<ProductDTO>>>() {
+            @Override
+            public void onSuccess(Result<List<ProductDTO>> result) {
+                if (result != null && result.isSuccess()) {
+                    favoriteList.clear();
+                    if (result.getData() != null) {
+                        favoriteList.addAll(result.getData());
+                    }
+                    adapter.notifyDataSetChanged();
+                    updateUI();
+                } else {
+                    Toast.makeText(FavoriteActivity.this,
+                            "加载失败: " + (result != null ? result.getMsg() : "未知错误"),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
 
-    private void initData() {
-        favoriteList = new ArrayList<>();
+            @Override
+            public void onError(String msg) {
+                Toast.makeText(FavoriteActivity.this, "网络错误: " + msg, Toast.LENGTH_SHORT).show();
+                updateUI();
+            }
+        });
     }
 
     private void setupRecyclerView() {
         adapter = new FavoriteAdapter(this, favoriteList, isEditMode);
+        adapter.setOnItemClickListener(new FavoriteAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                if (isEditMode) return;
+                ProductDTO product = favoriteList.get(position);
+                // 跳转到商品详情页
+                Toast.makeText(FavoriteActivity.this, "跳转到商品: " + product.getName(),
+                        Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onRemoveClick(int position) {
+                if (!isEditMode) return;
+                ProductDTO product = favoriteList.get(position);
+                removeFavorite(product.getId(), position);
+            }
+        });
+
         rvFavorites.setLayoutManager(new GridLayoutManager(this, 2));
         rvFavorites.setAdapter(adapter);
     }
@@ -122,9 +168,11 @@ public class FavoriteActivity extends AppCompatActivity {
         if (favoriteList.isEmpty()) {
             rvFavorites.setVisibility(View.GONE);
             layoutEmpty.setVisibility(View.VISIBLE);
+            tvEdit.setVisibility(View.GONE);
         } else {
             rvFavorites.setVisibility(View.VISIBLE);
             layoutEmpty.setVisibility(View.GONE);
+            tvEdit.setVisibility(View.VISIBLE);
             adapter.setEditMode(isEditMode);
             adapter.notifyDataSetChanged();
         }
@@ -134,26 +182,76 @@ public class FavoriteActivity extends AppCompatActivity {
         isEditMode = !isEditMode;
         tvEdit.setText(isEditMode ? "完成" : "编辑");
 
-        // 更新选中项列表
         adapter.setEditMode(isEditMode);
         adapter.notifyDataSetChanged();
 
         if (isEditMode) {
             Toast.makeText(this, "进入编辑模式，可选择要取消收藏的内容", Toast.LENGTH_SHORT).show();
         } else {
-            // 执行删除操作
-            deleteSelectedItems();
-            Toast.makeText(this, "已保存更改", Toast.LENGTH_SHORT).show();
+            // 执行批量删除操作
+            List<Integer> selectedIds = adapter.getSelectedProductIds();
+            if (!selectedIds.isEmpty()) {
+                batchRemoveFavorites(selectedIds);
+            } else {
+                Toast.makeText(this, "已保存更改", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
-    private void deleteSelectedItems() {
-        List<FavoriteItem> selectedItems = adapter.getSelectedItems();
-        if (!selectedItems.isEmpty()) {
-            favoriteList.removeAll(selectedItems);
-            adapter.clearSelection();
-            updateUI();
-            Toast.makeText(this, "取消了 " + selectedItems.size() + " 个收藏", Toast.LENGTH_SHORT).show();
-        }
+    private void removeFavorite(int productId, int position) {
+        FavoriteApiService.removeFavorite(this, productId, new NetworkUtils.Callback<Result<Void>>() {
+            @Override
+            public void onSuccess(Result<Void> result) {
+                if (result != null && result.isSuccess()) {
+                    favoriteList.remove(position);
+                    adapter.notifyItemRemoved(position);
+                    Toast.makeText(FavoriteActivity.this, "取消收藏成功", Toast.LENGTH_SHORT).show();
+                    updateUI();
+                } else {
+                    Toast.makeText(FavoriteActivity.this,
+                            "取消收藏失败: " + (result != null ? result.getMsg() : "未知错误"),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onError(String msg) {
+                Toast.makeText(FavoriteActivity.this, "网络错误: " + msg, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void batchRemoveFavorites(List<Integer> productIds) {
+        FavoriteApiService.batchRemoveFavorites(this, productIds,
+                new NetworkUtils.Callback<Result<Void>>() {
+                    @Override
+                    public void onSuccess(Result<Void> result) {
+                        if (result != null && result.isSuccess()) {
+                            // 从列表中移除已选中的商品
+                            List<ProductDTO> toRemove = new ArrayList<>();
+                            for (ProductDTO product : favoriteList) {
+                                if (productIds.contains(product.getId())) {
+                                    toRemove.add(product);
+                                }
+                            }
+                            favoriteList.removeAll(toRemove);
+                            adapter.clearSelection();
+                            adapter.notifyDataSetChanged();
+                            Toast.makeText(FavoriteActivity.this,
+                                    "取消了 " + productIds.size() + " 个收藏",
+                                    Toast.LENGTH_SHORT).show();
+                            updateUI();
+                        } else {
+                            Toast.makeText(FavoriteActivity.this,
+                                    "批量删除失败: " + (result != null ? result.getMsg() : "未知错误"),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onError(String msg) {
+                        Toast.makeText(FavoriteActivity.this, "网络错误: " + msg, Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

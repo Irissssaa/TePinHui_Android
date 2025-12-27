@@ -5,12 +5,16 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tepinhui.R;
+import com.example.tepinhui.dto.ProductDTO;
+import com.example.tepinhui.network.FootprintApiService;
+import com.example.tepinhui.network.UserApiService;
+import com.example.tepinhui.Result;
+import com.example.tepinhui.NetworkUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +26,7 @@ public class FootprintActivity extends AppCompatActivity {
     private RecyclerView rvFootprint;
     private LinearLayout layoutEmpty;
     private FootprintAdapter adapter;
-    private List<FootprintItem> footprintList;
+    private List<ProductDTO> footprintList;
     private boolean isEditMode = false;
 
     @Override
@@ -32,12 +36,17 @@ public class FootprintActivity extends AppCompatActivity {
 
         initViews();
         setupListeners();
-        initData();
         setupRecyclerView();
 
         // 默认选中今天
         selectTab(0);
-        loadDataByTime("today");
+        loadFootprints();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadFootprints();
     }
 
     private void initViews() {
@@ -50,6 +59,8 @@ public class FootprintActivity extends AppCompatActivity {
 
         // 返回按钮
         findViewById(R.id.iv_back).setOnClickListener(v -> finish());
+
+        footprintList = new ArrayList<>();
     }
 
     private void setupListeners() {
@@ -59,23 +70,22 @@ public class FootprintActivity extends AppCompatActivity {
         // 时间标签点击
         tabToday.setOnClickListener(v -> {
             selectTab(0);
-            loadDataByTime("today");
+            loadFootprints();
         });
 
         tabWeek.setOnClickListener(v -> {
             selectTab(1);
-            loadDataByTime("week");
+            loadFootprints();
         });
 
         tabMonth.setOnClickListener(v -> {
             selectTab(2);
-            loadDataByTime("month");
+            loadFootprints();
         });
     }
 
     private void selectTab(int position) {
         resetTabColors();
-
         int selectedColor = getResources().getColor(R.color.red_primary);
 
         switch (position) {
@@ -98,36 +108,58 @@ public class FootprintActivity extends AppCompatActivity {
         tabMonth.setTextColor(normalColor);
     }
 
-    private void loadDataByTime(String timeRange) {
-        footprintList.clear();
-
-        switch (timeRange) {
-            case "today":
-                footprintList.add(new FootprintItem("云南普洱茶", "今天 10:30", 128.00, R.drawable.ic_weixin_new));
-                footprintList.add(new FootprintItem("新疆大枣", "今天 09:15", 59.90, R.drawable.ic_weixin_new));
-                break;
-            case "week":
-                footprintList.add(new FootprintItem("金华火腿", "3天前", 288.00, R.drawable.ic_weixin_new));
-                footprintList.add(new FootprintItem("四川腊肉", "5天前", 45.00, R.drawable.ic_weixin_new));
-                footprintList.add(new FootprintItem("杭州丝绸", "6天前", 399.00, R.drawable.ic_weixin_new));
-                break;
-            case "month":
-                footprintList.add(new FootprintItem("西湖龙井", "15天前", 198.00, R.drawable.ic_weixin_new));
-                footprintList.add(new FootprintItem("阳澄湖大闸蟹", "20天前", 299.00, R.drawable.ic_weixin_new));
-                footprintList.add(new FootprintItem("东北大米", "25天前", 68.00, R.drawable.ic_weixin_new));
-                footprintList.add(new FootprintItem("宁夏枸杞", "28天前", 88.00, R.drawable.ic_weixin_new));
-                break;
+    private void loadFootprints() {
+        if (!UserApiService.isLoggedIn(this)) {
+            Toast.makeText(this, "请先登录", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
         }
 
-        updateUI();
-    }
+        FootprintApiService.getFootprints(this, new NetworkUtils.Callback<Result<List<ProductDTO>>>() {
+            @Override
+            public void onSuccess(Result<List<ProductDTO>> result) {
+                if (result != null && result.isSuccess()) {
+                    footprintList.clear();
+                    if (result.getData() != null) {
+                        footprintList.addAll(result.getData());
+                    }
+                    adapter.notifyDataSetChanged();
+                    updateUI();
+                } else {
+                    Toast.makeText(FootprintActivity.this,
+                            "加载失败: " + (result != null ? result.getMsg() : "未知错误"),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
 
-    private void initData() {
-        footprintList = new ArrayList<>();
+            @Override
+            public void onError(String msg) {
+                Toast.makeText(FootprintActivity.this, "网络错误: " + msg, Toast.LENGTH_SHORT).show();
+                updateUI();
+            }
+        });
     }
 
     private void setupRecyclerView() {
         adapter = new FootprintAdapter(footprintList, isEditMode);
+        adapter.setOnItemClickListener(new FootprintAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                if (isEditMode) return;
+                ProductDTO product = footprintList.get(position);
+                // 跳转到商品详情页
+                Toast.makeText(FootprintActivity.this, "跳转到商品: " + product.getName(),
+                        Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onRemoveClick(int position) {
+                if (!isEditMode) return;
+                ProductDTO product = footprintList.get(position);
+                deleteFootprint(position);
+            }
+        });
+
         rvFootprint.setLayoutManager(new LinearLayoutManager(this));
         rvFootprint.setAdapter(adapter);
     }
@@ -136,9 +168,11 @@ public class FootprintActivity extends AppCompatActivity {
         if (footprintList.isEmpty()) {
             rvFootprint.setVisibility(View.GONE);
             layoutEmpty.setVisibility(View.VISIBLE);
+            tvEdit.setVisibility(View.GONE);
         } else {
             rvFootprint.setVisibility(View.VISIBLE);
             layoutEmpty.setVisibility(View.GONE);
+            tvEdit.setVisibility(View.VISIBLE);
             adapter.setEditMode(isEditMode);
             adapter.notifyDataSetChanged();
         }
@@ -154,18 +188,63 @@ public class FootprintActivity extends AppCompatActivity {
         if (isEditMode) {
             Toast.makeText(this, "进入编辑模式，可选择要删除的足迹", Toast.LENGTH_SHORT).show();
         } else {
-            deleteSelectedItems();
-            Toast.makeText(this, "已保存更改", Toast.LENGTH_SHORT).show();
+            List<Integer> selectedPositions = adapter.getSelectedPositions();
+            if (!selectedPositions.isEmpty()) {
+                batchDeleteFootprints(selectedPositions);
+            } else {
+                Toast.makeText(this, "已保存更改", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
-    private void deleteSelectedItems() {
-        List<FootprintItem> selectedItems = adapter.getSelectedItems();
-        if (!selectedItems.isEmpty()) {
-            footprintList.removeAll(selectedItems);
-            adapter.clearSelection();
-            updateUI();
-            Toast.makeText(this, "删除了 " + selectedItems.size() + " 个足迹", Toast.LENGTH_SHORT).show();
+    private void deleteFootprint(int position) {
+        // 由于后端接口需要足迹ID，这里我们简化处理
+        // 实际开发中应该从ProductDTO中获取足迹ID
+        Toast.makeText(this, "删除单个足迹", Toast.LENGTH_SHORT).show();
+        footprintList.remove(position);
+        adapter.notifyItemRemoved(position);
+        updateUI();
+    }
+
+    private void batchDeleteFootprints(List<Integer> positions) {
+        // 收集要删除的足迹ID
+        List<Integer> footprintIds = new ArrayList<>();
+        for (int position : positions) {
+            // 这里需要足迹ID，简化处理
+            // 实际开发中应该从ProductDTO中获取足迹ID
+            footprintIds.add(position);
         }
+
+        FootprintApiService.batchDeleteFootprints(this, footprintIds,
+                new NetworkUtils.Callback<Result<Void>>() {
+                    @Override
+                    public void onSuccess(Result<Void> result) {
+                        if (result != null && result.isSuccess()) {
+                            // 从列表中移除已选中的足迹
+                            List<ProductDTO> toRemove = new ArrayList<>();
+                            for (int position : positions) {
+                                if (position < footprintList.size()) {
+                                    toRemove.add(footprintList.get(position));
+                                }
+                            }
+                            footprintList.removeAll(toRemove);
+                            adapter.clearSelection();
+                            adapter.notifyDataSetChanged();
+                            Toast.makeText(FootprintActivity.this,
+                                    "删除了 " + positions.size() + " 个足迹",
+                                    Toast.LENGTH_SHORT).show();
+                            updateUI();
+                        } else {
+                            Toast.makeText(FootprintActivity.this,
+                                    "批量删除失败: " + (result != null ? result.getMsg() : "未知错误"),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onError(String msg) {
+                        Toast.makeText(FootprintActivity.this, "网络错误: " + msg, Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

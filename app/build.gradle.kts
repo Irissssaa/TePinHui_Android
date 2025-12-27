@@ -32,7 +32,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
@@ -44,7 +43,10 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.9.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    // 图片加载库 Glide
+
+    // 图片加载库 - 两个都保留，根据需要使用
     implementation("com.github.bumptech.glide:glide:4.15.1")
+    implementation("com.squareup.picasso:picasso:2.8")
+
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 }

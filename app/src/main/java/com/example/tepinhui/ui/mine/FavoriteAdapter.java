@@ -8,11 +8,12 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tepinhui.R;
+import com.example.tepinhui.dto.ProductDTO;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -21,14 +22,26 @@ import java.util.Set;
 
 public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHolder> {
 
-    private List<FavoriteItem> favoriteList;
+    private List<ProductDTO> favoriteList;
     private Set<Integer> selectedPositions;
+    private Set<Integer> selectedProductIds;
     private boolean isEditMode;
+    private OnItemClickListener listener;
 
-    public FavoriteAdapter(FavoriteActivity favoriteActivity, List<FavoriteItem> favoriteList, boolean isEditMode) {
+    public interface OnItemClickListener {
+        void onItemClick(int position);
+        void onRemoveClick(int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
+    public FavoriteAdapter(FavoriteActivity favoriteActivity, List<ProductDTO> favoriteList, boolean isEditMode) {
         this.favoriteList = favoriteList;
         this.isEditMode = isEditMode;
         this.selectedPositions = new HashSet<>();
+        this.selectedProductIds = new HashSet<>();
     }
 
     @NonNull
@@ -41,19 +54,22 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        FavoriteItem item = favoriteList.get(position);
+        ProductDTO item = favoriteList.get(position);
 
         holder.tvName.setText(item.getName());
-        holder.tvType.setText(item.getType());
+        holder.tvType.setText(item.getOrigin() != null ? item.getOrigin() : "特产");
+        holder.tvRating.setText(String.format("¥%.2f", item.getPrice()));
 
-        if (item.getCategory().equals("shop")) {
-            holder.tvRating.setText(String.format("评分：%.1f", item.getRating()));
-            holder.tvRating.setVisibility(View.VISIBLE);
+        // 使用 Picasso 加载图片
+        if (item.getImageUrl() != null && !item.getImageUrl().isEmpty()) {
+            Picasso.get()
+                    .load(item.getImageUrl())
+                    .placeholder(R.drawable.ic_weixin_new) // 默认图片
+                    .error(R.drawable.ic_weixin_new)
+                    .into(holder.ivImage);
         } else {
-            holder.tvRating.setVisibility(View.GONE);
+            holder.ivImage.setImageResource(R.drawable.ic_weixin_new);
         }
-
-        holder.ivImage.setImageResource(item.getImageResId());
 
         if (isEditMode) {
             holder.cbSelect.setVisibility(View.VISIBLE);
@@ -67,10 +83,42 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     selectedPositions.add(position);
+                    selectedProductIds.add(item.getId());
                 } else {
                     selectedPositions.remove(position);
+                    selectedProductIds.remove(item.getId());
                 }
             }
+        });
+
+        // 商品点击事件
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                if (isEditMode) {
+                    // 编辑模式下，点击切换选中状态
+                    boolean newChecked = !selectedPositions.contains(position);
+                    holder.cbSelect.setChecked(newChecked);
+                    if (newChecked) {
+                        selectedPositions.add(position);
+                        selectedProductIds.add(item.getId());
+                    } else {
+                        selectedPositions.remove(position);
+                        selectedProductIds.remove(item.getId());
+                    }
+                } else {
+                    // 非编辑模式下，跳转到商品详情
+                    listener.onItemClick(position);
+                }
+            }
+        });
+
+        // 长按进入编辑模式
+        holder.itemView.setOnLongClickListener(v -> {
+            if (!isEditMode && listener != null) {
+                listener.onRemoveClick(position);
+                return true;
+            }
+            return false;
         });
     }
 
@@ -83,20 +131,19 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.ViewHo
         isEditMode = editMode;
         if (!editMode) {
             selectedPositions.clear();
+            selectedProductIds.clear();
         }
         notifyDataSetChanged();
     }
 
-    public List<FavoriteItem> getSelectedItems() {
-        List<FavoriteItem> selectedItems = new ArrayList<>();
-        for (int position : selectedPositions) {
-            selectedItems.add(favoriteList.get(position));
-        }
-        return selectedItems;
+    public List<Integer> getSelectedProductIds() {
+        return new ArrayList<>(selectedProductIds);
     }
 
     public void clearSelection() {
         selectedPositions.clear();
+        selectedProductIds.clear();
+        notifyDataSetChanged();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

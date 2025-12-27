@@ -8,24 +8,38 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tepinhui.R;
+import com.example.tepinhui.dto.ProductDTO;
+import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 public class FootprintAdapter extends RecyclerView.Adapter<FootprintAdapter.ViewHolder> {
 
-    private List<FootprintItem> footprintList;
+    private List<ProductDTO> footprintList;
     private Set<Integer> selectedPositions;
     private boolean isEditMode;
+    private OnItemClickListener listener;
 
-    public FootprintAdapter(List<FootprintItem> footprintList, boolean isEditMode) {
+    public interface OnItemClickListener {
+        void onItemClick(int position);
+        void onRemoveClick(int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
+    public FootprintAdapter(List<ProductDTO> footprintList, boolean isEditMode) {
         this.footprintList = footprintList;
         this.isEditMode = isEditMode;
         this.selectedPositions = new HashSet<>();
@@ -41,12 +55,26 @@ public class FootprintAdapter extends RecyclerView.Adapter<FootprintAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        FootprintItem item = footprintList.get(position);
+        ProductDTO item = footprintList.get(position);
 
         holder.tvProductName.setText(item.getName());
-        holder.tvViewTime.setText(item.getViewTime());
         holder.tvPrice.setText(String.format("¥%.2f", item.getPrice()));
-        holder.ivProduct.setImageResource(item.getImageResId());
+
+        // 显示浏览时间（这里简化处理，实际应该从足迹记录中获取时间）
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd HH:mm", Locale.CHINA);
+        String viewTime = sdf.format(new Date());
+        holder.tvViewTime.setText(viewTime);
+
+        // 加载图片
+        if (item.getImageUrl() != null && !item.getImageUrl().isEmpty()) {
+            Picasso.get()
+                    .load(item.getImageUrl())
+                    .placeholder(R.drawable.ic_weixin_new)
+                    .error(R.drawable.ic_weixin_new)
+                    .into(holder.ivProduct);
+        } else {
+            holder.ivProduct.setImageResource(R.drawable.ic_weixin_new);
+        }
 
         if (isEditMode) {
             holder.cbSelect.setVisibility(View.VISIBLE);
@@ -65,6 +93,34 @@ public class FootprintAdapter extends RecyclerView.Adapter<FootprintAdapter.View
                 }
             }
         });
+
+        // 商品点击事件
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                if (isEditMode) {
+                    // 编辑模式下，点击切换选中状态
+                    boolean newChecked = !selectedPositions.contains(position);
+                    holder.cbSelect.setChecked(newChecked);
+                    if (newChecked) {
+                        selectedPositions.add(position);
+                    } else {
+                        selectedPositions.remove(position);
+                    }
+                } else {
+                    // 非编辑模式下，跳转到商品详情
+                    listener.onItemClick(position);
+                }
+            }
+        });
+
+        // 长按进入编辑模式
+        holder.itemView.setOnLongClickListener(v -> {
+            if (!isEditMode && listener != null) {
+                listener.onRemoveClick(position);
+                return true;
+            }
+            return false;
+        });
     }
 
     @Override
@@ -80,16 +136,13 @@ public class FootprintAdapter extends RecyclerView.Adapter<FootprintAdapter.View
         notifyDataSetChanged();
     }
 
-    public List<FootprintItem> getSelectedItems() {
-        List<FootprintItem> selectedItems = new ArrayList<>();
-        for (int position : selectedPositions) {
-            selectedItems.add(footprintList.get(position));
-        }
-        return selectedItems;
+    public List<Integer> getSelectedPositions() {
+        return new ArrayList<>(selectedPositions);
     }
 
     public void clearSelection() {
         selectedPositions.clear();
+        notifyDataSetChanged();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
