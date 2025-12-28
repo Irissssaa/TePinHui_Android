@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- 网络权限 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:usesCleartextTraffic="true"
         android:allowBackup="true"
+        android:usesCleartextTraffic="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
@@ -15,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TePinhui">
 
-        <!-- 主界面：现在是一个普通的 activity，只有登录成功才能进来 -->
+        <!-- ================= 启动页：首页 ================= -->
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -25,84 +26,89 @@
             </intent-filter>
         </activity>
 
+        <!-- ================= 登录 / 注册 ================= -->
+        <activity android:name=".ui.auth.LoginActivity" />
+        <activity android:name=".ui.auth.RegisterActivity" />
+
+        <!-- ================= 搜索 ================= -->
+        <activity android:name=".SearchActivity" />
+
+        <!-- ================= 分类 ================= -->
+        <activity android:name=".ui.category.CategoryActivity" />
+
+        <!-- ================= 商品 ================= -->
+        <activity android:name=".ui.product.ProductDetailActivity" />
+
+        <!-- ================= 购物车 ================= -->
+        <activity android:name=".ui.cart.CartActivity" />
+
+        <!-- ================= 订单 ================= -->
+        <activity
+            android:name=".ui.order.AllOrdersActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".ui.order.PendingPaymentActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".ui.order.PendingShipmentActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".ui.order.PendingReceiptActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".ui.order.PendingReviewActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".ui.order.RefundActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".ui.order.LogisticsInfoActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
+        <!-- ================= 社区 ================= -->
+        <activity android:name=".ui.community.PostPublishActivity" />
+        <activity android:name=".ui.community.PostDetailActivity" />
+        <activity android:name=".ui.community.HelpDetailActivity" />
+
+        <!-- ================= 故事 ================= -->
+        <activity android:name=".ui.story.StoryListActivity" />
+        <activity android:name=".ui.story.StoryDetailActivity" />
+
+        <!-- ================= 我的 ================= -->
+        <activity
+            android:name=".ui.mine.AddressActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".ui.mine.FootprintActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".ui.mine.FavoriteActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".ui.mine.ServiceCenterActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".ui.mine.LikeInfoActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
+        <!-- ================= 客服 / 消息 ================= -->
+        <activity
+            android:name=".ui.service.OnlineServiceActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
         <activity
             android:name=".ui.message.MessageListActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.message.MessageSearchActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.message.MessageSettingActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
+        <!-- ================= 促销信息（如仍存在） ================= -->
         <activity
-            android:name=".ui.category.CategoryActivity"
-            android:exported="false" />
-
-        <activity
-            android:name=".SearchActivity"
-            android:exported="false" />
-
-        <!-- 登录界面：设置为启动页 (有 intent-filter) -->
-        <activity
-            android:name=".ui.auth.LoginActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <!-- 注册界面 -->
-        <activity android:name=".ui.auth.RegisterActivity" />
-
-        <!-- 商品详情界面 -->
-        <activity android:name=".ui.product.ProductDetailActivity" />
-
-        <!-- 购物车界面 -->
-        <activity android:name=".ui.cart.CartActivity" />
-
-        <!-- 特产故事界面 -->
-        <activity android:name=".ui.story.StoryDetailActivity" />
-        <activity android:name=".ui.story.StoryListActivity" />
-
-        <!-- 社区相关界面 -->
-        <activity android:name=".ui.community.PostPublishActivity" />
-        <activity
-            android:name=".ui.community.PostDetailActivity"
-            android:exported="false" />
-        <activity android:name=".ui.community.HelpDetailActivity" />
-
-        <!-- 我的页面相关Activity -->
-        <activity android:name=".ui.order.AllOrdersActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".ui.order.PendingPaymentActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".ui.order.PendingShipmentActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".ui.order.PendingReceiptActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".ui.order.PendingReviewActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".ui.order.RefundActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".ui.mine.AddressActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".ui.mine.FootprintActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".ui.mine.FavoriteActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".ui.mine.ServiceCenterActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".ui.service.OnlineServiceActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-
-        <!-- 消息页面相关Activity -->
-        <activity android:name=".ui.order.LogisticsInfoActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".PromotionInfoActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-        <activity android:name=".ui.mine.LikeInfoActivity"
+            android:name=".PromotionInfoActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
     </application>

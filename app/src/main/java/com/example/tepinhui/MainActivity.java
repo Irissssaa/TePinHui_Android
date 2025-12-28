@@ -54,5 +54,16 @@ public class MainActivity extends AppCompatActivity {
             }
             return false;
         });
+
+        String targetTab = getIntent().getStringExtra("target_tab");
+        int communityTab = getIntent().getIntExtra("community_tab", -1);
+
+        if ("community".equals(targetTab)) {
+            navView.setSelectedItemId(R.id.navigation_community);
+
+            // 把 tab index 传给 CommunityFragment
+            CommunityFragment.setDefaultTab(communityTab);
+        }
+
     }
 }

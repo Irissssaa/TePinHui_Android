@@ -16,7 +16,9 @@ import com.example.tepinhui.R;
 import com.example.tepinhui.Result;
 import com.example.tepinhui.dto.CommunityPostDTO;
 import com.example.tepinhui.dto.PageDTO;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +26,7 @@ public class HotFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private CommunityPostAdapter adapter;
-    private List<CommunityPost> postList = new ArrayList<>();
+    private final List<CommunityPost> postList = new ArrayList<>();
 
     @Nullable
     @Override
@@ -40,7 +42,7 @@ public class HotFragment extends Fragment {
         adapter = new CommunityPostAdapter(
                 getContext(),
                 postList,
-                PostSource.NORMAL        // ⭐ 关键
+                PostSource.HOT
         );
         recyclerView.setAdapter(adapter);
 
@@ -52,26 +54,24 @@ public class HotFragment extends Fragment {
     private void loadHotPosts() {
         String url = CommunityApi.posts("HOT", 1, 10);
 
-        java.lang.reflect.Type type =
-                new com.google.gson.reflect.TypeToken<
-                        Result<PageDTO<CommunityPostDTO>>
-                        >() {}.getType();
+        Type type = new TypeToken<Result<PageDTO<CommunityPostDTO>>>() {}.getType();
 
-        NetworkUtils.get(url, type, new NetworkUtils.Callback<
-                Result<PageDTO<CommunityPostDTO>>
-                >() {
+        NetworkUtils.get(url, type, new NetworkUtils.Callback<Result<PageDTO<CommunityPostDTO>>>() {
+
             @Override
             public void onSuccess(Result<PageDTO<CommunityPostDTO>> result) {
-
                 postList.clear();
 
                 PageDTO<CommunityPostDTO> page = result.getData();
-                if (page == null || page.list == null) return;
+                if (page == null || page.list == null) {
+                    adapter.notifyDataSetChanged();
+                    return;
+                }
 
                 for (CommunityPostDTO dto : page.list) {
                     CommunityPost post = new CommunityPost(
                             dto.userName,
-                            AvatarUtil.forUser(dto.userName),
+                            R.drawable.avatar_1, // 先用占位头像
                             dto.content,
                             dto.createdAt,
                             dto.likeCount,
@@ -79,8 +79,6 @@ public class HotFragment extends Fragment {
                             new ArrayList<>()
                     );
                     post.setPostId(dto.id);
-                    post.setAvatarUrl(dto.avatarUrl);
-                    post.setImageUrls(dto.images);
                     postList.add(post);
                 }
 
@@ -89,15 +87,8 @@ public class HotFragment extends Fragment {
 
             @Override
             public void onError(String msg) {
-                // 可 Toast
+                // TODO: 可加 Toast / Log
             }
         });
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        // 发帖/点赞/评论返回后，刷新列表以获取最新 commentCount/likeCount
-        loadHotPosts();
     }
 }
