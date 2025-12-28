@@ -30,9 +30,16 @@ public class CommunityFragment extends Fragment {
         tabLayout = view.findViewById(R.id.tabLayout);
 
         FloatingActionButton fabPost = view.findViewById(R.id.fab_post);
-        fabPost.setOnClickListener(v ->
-                startActivity(new Intent(getContext(), PostPublishActivity.class))
-        );
+        fabPost.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), PostPublishActivity.class);
+            int pos = tabLayout.getSelectedTabPosition();
+            // 默认互助区；也允许在热点/安利里发帖（按后端 source 校验）
+            String source = "HELP";
+            if (pos == 0) source = "HOT";
+            else if (pos == 1) source = "RECOMMEND";
+            intent.putExtra(PostPublishActivity.EXTRA_SOURCE, source);
+            startActivity(intent);
+        });
 
         // 添加 Tab
         tabLayout.addTab(tabLayout.newTab().setText("本周热点"));

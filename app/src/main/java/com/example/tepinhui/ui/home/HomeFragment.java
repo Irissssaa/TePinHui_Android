@@ -58,7 +58,7 @@ public class HomeFragment extends Fragment {
         View btnStory = view.findViewById(R.id.entry_story);
 
         layoutSearch.setOnClickListener(v -> {
-            // 先用占位 SearchActivity，没有也没关系
+            // 跳转到真实搜索页（请求 /api/products?keyword=...）
             startActivity(new Intent(getContext(), SearchActivity.class));
         });
 

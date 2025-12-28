@@ -1,6 +1,7 @@
 package com.example.tepinhui.ui.product;
 
 import android.content.SharedPreferences;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +18,7 @@ import com.example.tepinhui.NetworkUtils;
 import com.example.tepinhui.R;
 import com.example.tepinhui.Result;
 import com.example.tepinhui.dto.ProductDTO;
+import com.example.tepinhui.ui.story.StoryDetailActivity;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -37,6 +39,7 @@ public class ProductDetailActivity extends AppCompatActivity {
     private Button btnBuy;
 
     private int productId;
+    private Integer storyId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,9 +69,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         btnBuy.setOnClickListener(v -> addToCart());
 
         // 4) 特产故事入口（先占位）
-        layoutStoryEntry.setOnClickListener(v ->
-                Toast.makeText(this, "特产故事即将上线", Toast.LENGTH_SHORT).show()
-        );
+        layoutStoryEntry.setOnClickListener(v -> openStory());
 
         // 5) 拉取详情
         loadProductDetail(productId);
@@ -141,11 +142,22 @@ public class ProductDetailActivity extends AppCompatActivity {
         }
 
         // ===== 特产故事入口 =====
-        if (p.getStoryId() != null) {
+        storyId = p.getStoryId();
+        if (storyId != null) {
             layoutStoryEntry.setVisibility(View.VISIBLE);
         } else {
             layoutStoryEntry.setVisibility(View.GONE);
         }
+    }
+
+    private void openStory() {
+        if (storyId == null || storyId <= 0) {
+            Toast.makeText(this, "该商品暂无故事", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Intent intent = new Intent(this, StoryDetailActivity.class);
+        intent.putExtra("storyId", storyId);
+        startActivity(intent);
     }
 
     private void addToCart() {

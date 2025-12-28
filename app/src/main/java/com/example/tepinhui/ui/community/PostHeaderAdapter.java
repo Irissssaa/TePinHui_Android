@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.tepinhui.R;
 
 import java.util.List;
@@ -16,9 +17,18 @@ import java.util.List;
 public class PostHeaderAdapter extends RecyclerView.Adapter<PostHeaderAdapter.VH> {
 
     private CommunityPost post;
+    private OnLikeClickListener onLikeClickListener;
 
     public PostHeaderAdapter(CommunityPost post) {
         this.post = post;
+    }
+
+    public interface OnLikeClickListener {
+        void onLikeClick(CommunityPost post);
+    }
+
+    public void setOnLikeClickListener(OnLikeClickListener listener) {
+        this.onLikeClickListener = listener;
     }
 
     public void updatePost(CommunityPost post) {
@@ -44,21 +54,46 @@ public class PostHeaderAdapter extends RecyclerView.Adapter<PostHeaderAdapter.VH
         h.headerLikeCount.setText("赞 " + post.getLikeCount());
         h.headerCommentCount.setText("评论 " + post.getCommentCount());
         // avatar：你现在是 resId，没有就用占位
-        int avatarRes = post.getAvatarResId();
-        if (avatarRes != 0) {
-            h.ivAvatar.setImageResource(avatarRes);
+        if (post.getAvatarUrl() != null && !post.getAvatarUrl().trim().isEmpty()) {
+            Glide.with(h.ivAvatar.getContext())
+                    .load(post.getAvatarUrl())
+                    .placeholder(R.drawable.ic_avatar_placeholder)
+                    .error(R.drawable.ic_avatar_placeholder)
+                    .into(h.ivAvatar);
         } else {
-            h.ivAvatar.setImageResource(R.mipmap.ic_launcher); // 换成你的默认头像占位
+            int avatarRes = post.getAvatarResId();
+            if (avatarRes != 0) {
+                h.ivAvatar.setImageResource(avatarRes);
+            } else {
+                h.ivAvatar.setImageResource(R.drawable.ic_avatar_placeholder);
+            }
         }
 
         // post image：0 表示无图
-        List<Integer> images = post.getImageList();
-        if (images != null && !images.isEmpty()) {
+        if (post.getImageUrls() != null && !post.getImageUrls().isEmpty()
+                && post.getImageUrls().get(0) != null
+                && !post.getImageUrls().get(0).trim().isEmpty()) {
             h.ivPostImage.setVisibility(View.VISIBLE);
-            h.ivPostImage.setImageResource(images.get(0)); // 先展示第一张
+            Glide.with(h.ivPostImage.getContext())
+                    .load(post.getImageUrls().get(0))
+                    .placeholder(R.drawable.ic_image_placeholder)
+                    .error(R.drawable.ic_image_placeholder)
+                    .into(h.ivPostImage);
         } else {
-            h.ivPostImage.setVisibility(View.GONE);
+            List<Integer> images = post.getImageList();
+            if (images != null && !images.isEmpty()) {
+                h.ivPostImage.setVisibility(View.VISIBLE);
+                h.ivPostImage.setImageResource(images.get(0)); // 先展示第一张
+            } else {
+                h.ivPostImage.setVisibility(View.GONE);
+            }
         }
+
+        h.headerLikeCount.setOnClickListener(v -> {
+            if (onLikeClickListener != null) {
+                onLikeClickListener.onLikeClick(post);
+            }
+        });
     }
 
     @Override

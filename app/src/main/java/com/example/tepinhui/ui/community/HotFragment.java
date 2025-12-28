@@ -1,8 +1,21 @@
 package com.example.tepinhui.ui.community;
 
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.tepinhui.NetworkUtils;
+import com.example.tepinhui.R;
+import com.example.tepinhui.Result;
+import com.example.tepinhui.dto.CommunityPostDTO;
+import com.example.tepinhui.dto.PageDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +40,7 @@ public class HotFragment extends Fragment {
         adapter = new CommunityPostAdapter(
                 getContext(),
                 postList,
-                PostSource.HOT        // ⭐ 关键
+                PostSource.NORMAL        // ⭐ 关键
         );
         recyclerView.setAdapter(adapter);
 
@@ -58,7 +71,7 @@ public class HotFragment extends Fragment {
                 for (CommunityPostDTO dto : page.list) {
                     CommunityPost post = new CommunityPost(
                             dto.userName,
-                            R.drawable.avatar_1,
+                            AvatarUtil.forUser(dto.userName),
                             dto.content,
                             dto.createdAt,
                             dto.likeCount,
@@ -66,6 +79,8 @@ public class HotFragment extends Fragment {
                             new ArrayList<>()
                     );
                     post.setPostId(dto.id);
+                    post.setAvatarUrl(dto.avatarUrl);
+                    post.setImageUrls(dto.images);
                     postList.add(post);
                 }
 
@@ -77,5 +92,12 @@ public class HotFragment extends Fragment {
                 // 可 Toast
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // 发帖/点赞/评论返回后，刷新列表以获取最新 commentCount/likeCount
+        loadHotPosts();
     }
 }

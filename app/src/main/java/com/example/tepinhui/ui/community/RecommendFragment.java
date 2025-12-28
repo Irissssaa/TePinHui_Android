@@ -20,7 +20,7 @@ import com.example.tepinhui.dto.PageDTO;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HotFragment extends Fragment {
+public class RecommendFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private CommunityPostAdapter adapter;
@@ -40,16 +40,16 @@ public class HotFragment extends Fragment {
         adapter = new CommunityPostAdapter(
                 getContext(),
                 postList,
-                PostSource.Recommend        // ⭐ 关键
+                PostSource.NORMAL        // ⭐ 关键
         );
         recyclerView.setAdapter(adapter);
 
-        loadHotPosts();
+        loadRecommendPosts();
 
         return view;
     }
 
-    private void loadHotPosts() {
+    private void loadRecommendPosts() {
         String url = CommunityApi.posts("RECOMMEND", 1, 10);
 
         java.lang.reflect.Type type =
@@ -71,7 +71,7 @@ public class HotFragment extends Fragment {
                 for (CommunityPostDTO dto : page.list) {
                     CommunityPost post = new CommunityPost(
                             dto.userName,
-                            R.drawable.avatar_1,
+                            AvatarUtil.forUser(dto.userName),
                             dto.content,
                             dto.createdAt,
                             dto.likeCount,
@@ -79,6 +79,8 @@ public class HotFragment extends Fragment {
                             new ArrayList<>()
                     );
                     post.setPostId(dto.id);
+                    post.setAvatarUrl(dto.avatarUrl);
+                    post.setImageUrls(dto.images);
                     postList.add(post);
                 }
 
@@ -90,5 +92,11 @@ public class HotFragment extends Fragment {
                 // 可 Toast
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadRecommendPosts();
     }
 }
