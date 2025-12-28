@@ -1,8 +1,8 @@
 package com.example.tepinhui.ui.product;
 
-import android.content.SharedPreferences;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -18,6 +18,7 @@ import com.example.tepinhui.NetworkUtils;
 import com.example.tepinhui.R;
 import com.example.tepinhui.Result;
 import com.example.tepinhui.dto.ProductDTO;
+import com.example.tepinhui.network.UserApiService;
 import com.example.tepinhui.ui.story.StoryDetailActivity;
 import com.google.gson.reflect.TypeToken;
 
@@ -161,10 +162,9 @@ public class ProductDetailActivity extends AppCompatActivity {
     }
 
     private void addToCart() {
-        SharedPreferences sp = getSharedPreferences("user", MODE_PRIVATE);
-        String token = sp.getString("token", null);
+        String token = UserApiService.getToken(this);
 
-        if (token == null || token.isEmpty()) {
+        if (TextUtils.isEmpty(token)) {
             Toast.makeText(this, "请先登录", Toast.LENGTH_SHORT).show();
             return;
         }

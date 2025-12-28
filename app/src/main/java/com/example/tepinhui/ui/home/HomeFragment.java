@@ -69,8 +69,9 @@ public class HomeFragment extends Fragment {
         });
 
         btnHot.setOnClickListener(v -> {
-            Intent intent = new Intent(getContext(), CategoryActivity.class);
-            intent.putExtra("mode", "hot"); // 预留
+            Intent intent = new Intent(getContext(), com.example.tepinhui.MainActivity.class);
+            intent.putExtra("target_tab", "community");
+            intent.putExtra("community_tab", 0); // 0 = 本周热点
             startActivity(intent);
         });
 

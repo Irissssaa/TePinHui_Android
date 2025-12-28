@@ -18,6 +18,14 @@ public class CommunityFragment extends Fragment {
 
     private TabLayout tabLayout;
 
+    private static int defaultTabIndex = 0;
+
+    public static void setDefaultTab(int index) {
+        if (index >= 0) {
+            defaultTabIndex = index;
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(
@@ -46,8 +54,25 @@ public class CommunityFragment extends Fragment {
         tabLayout.addTab(tabLayout.newTab().setText("好物安利"));
         tabLayout.addTab(tabLayout.newTab().setText("互助区"));
 
-        // ⭐ 默认显示：本周热点
-        replaceFragment(new HotFragment());
+        // 默认选中指定 Tab
+        TabLayout.Tab tab = tabLayout.getTabAt(defaultTabIndex);
+        if (tab != null) {
+            tab.select();
+        }
+
+        // 同步 Fragment
+        switch (defaultTabIndex) {
+            case 0:
+                replaceFragment(new HotFragment());
+                break;
+            case 1:
+                replaceFragment(new RecommendFragment());
+                break;
+            case 2:
+                replaceFragment(new HelpFragment());
+                break;
+        }
+
 
         // Tab 切换逻辑
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

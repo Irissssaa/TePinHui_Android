@@ -17,13 +17,10 @@ import java.util.Map;
 
 public class PostPublishActivity extends AppCompatActivity {
 
+    // ✅【关键】给 CommunityFragment 用的常量
+    public static final String EXTRA_SOURCE = "extra_source";
+
     private EditText etContent;
-
-    // 示例：发帖来源（你可以从 Intent 传）
-    private String source = "HELP"; // HELP / HOT / RECOMMEND
-
-    // 示例：登录 token（你项目里已有）
-    private String token = "your_token_here";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,15 +39,30 @@ public class PostPublishActivity extends AppCompatActivity {
             return;
         }
 
-        // 1️⃣ 构造请求体
+        // 1️⃣ 从 Intent 里取 source（HOT / RECOMMEND / HELP）
+        String source = getIntent().getStringExtra(EXTRA_SOURCE);
+        if (TextUtils.isEmpty(source)) {
+            source = "HELP"; // 兜底
+        }
+
+        // 2️⃣ token（你项目里已有登录逻辑）
+        String token = getSharedPreferences("user", MODE_PRIVATE)
+                .getString("token", null);
+
+        if (TextUtils.isEmpty(token)) {
+            Toast.makeText(this, "请先登录", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // 3️⃣ 构造请求体
         Map<String, Object> body = new HashMap<>();
         body.put("source", source);
         body.put("content", content);
-        body.put("images", new ArrayList<>()); // 先不传图
+        body.put("images", new ArrayList<>()); // 当前版本不传图
 
-        // 2️⃣ 调接口
+        // 4️⃣ 发请求
         NetworkUtils.post(
-                CommunityApi.publishPost(),
+                "/api/community/posts",
                 body,
                 token,
                 Result.class,
@@ -60,7 +72,7 @@ public class PostPublishActivity extends AppCompatActivity {
                         if ("0".equals(result.getCode())) {
                             Toast.makeText(PostPublishActivity.this,
                                     "发布成功", Toast.LENGTH_SHORT).show();
-                            finish(); // 发完就退出
+                            finish();
                         } else {
                             Toast.makeText(PostPublishActivity.this,
                                     result.getMsg(), Toast.LENGTH_SHORT).show();
