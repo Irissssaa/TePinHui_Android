@@ -17,11 +17,15 @@ import com.example.tepinhui.dto.ProductListDTO;
 import com.example.tepinhui.ui.product.ProductAdapter;
 import com.google.gson.reflect.TypeToken;
 
+import java.net.URLEncoder;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.nio.charset.StandardCharsets;
 
 public class SearchActivity extends AppCompatActivity {
+
+    public static final String EXTRA_KEYWORD = "extra_keyword";
 
     private EditText etSearch;
     private RecyclerView recyclerView;
@@ -36,6 +40,17 @@ public class SearchActivity extends AppCompatActivity {
         initView();
         initRecyclerView();
         initListener();
+
+        // 支持从外部带入 keyword（例如“点击首页搜索框但已预填”）
+        String preset = getIntent() != null ? getIntent().getStringExtra(EXTRA_KEYWORD) : null;
+        if (preset != null) {
+            preset = preset.trim();
+            if (!preset.isEmpty()) {
+                etSearch.setText(preset);
+                etSearch.setSelection(preset.length());
+                searchProducts(preset);
+            }
+        }
     }
 
     private void initView() {
@@ -61,7 +76,7 @@ public class SearchActivity extends AppCompatActivity {
         // 键盘搜索
         etSearch.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH ||
-                    (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
+                    (event != null && event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) {
                 doSearch();
                 return true;
             }
@@ -83,8 +98,16 @@ public class SearchActivity extends AppCompatActivity {
     private void searchProducts(String keyword) {
         Type type = new TypeToken<Result<ProductListDTO>>() {}.getType();
 
+        String encoded;
+        try {
+            // 兼容中文/空格等字符，避免拼 URL 导致 400/解析失败
+            encoded = URLEncoder.encode(keyword, StandardCharsets.UTF_8.name());
+        } catch (Exception e) {
+            encoded = keyword;
+        }
+
         NetworkUtils.get(
-                "/api/products?page=1&size=20&keyword=" + keyword,
+                "/api/products?page=1&size=20&keyword=" + encoded,
                 type,
                 new NetworkUtils.Callback<Result<ProductListDTO>>() {
                     @Override
@@ -93,6 +116,11 @@ public class SearchActivity extends AppCompatActivity {
                             productList.clear();
                             productList.addAll(result.getData().getList());
                             adapter.notifyDataSetChanged();
+                            if (productList.isEmpty()) {
+                                Toast.makeText(SearchActivity.this, "暂无搜索结果", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(SearchActivity.this, result != null ? result.getMsg() : "搜索失败", Toast.LENGTH_SHORT).show();
                         }
                     }
 

@@ -11,8 +11,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.tepinhui.NetworkUtils;
 import com.example.tepinhui.R;
 import com.example.tepinhui.Result;
+import com.example.tepinhui.dto.CategoryDTO;
 import com.example.tepinhui.dto.ProductDTO;
 import com.example.tepinhui.dto.ProductListDTO;
+import com.example.tepinhui.dto.RegionDTO;
 import com.example.tepinhui.ui.product.ProductAdapter;
 import com.google.gson.reflect.TypeToken;
 
@@ -41,6 +43,10 @@ public class CategoryActivity extends AppCompatActivity {
     // 当前模式：region / category
     private boolean isRegionMode = true;
 
+    // 后端返回的「地区/品类」（带 id）
+    private final List<RegionDTO> regions = new ArrayList<>();
+    private final List<CategoryDTO> categories = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +58,8 @@ public class CategoryActivity extends AppCompatActivity {
 
         // 默认：按地区
         switchToRegion();
-        loadProducts();
+        // 先拉取地区/品类（带 id），再按选择请求商品
+        loadRegions();
     }
 
     private void initView() {
@@ -66,6 +73,15 @@ public class CategoryActivity extends AppCompatActivity {
         // 左侧分类
         recyclerCategory.setLayoutManager(new LinearLayoutManager(this));
         categoryAdapter = new CategoryAdapter(categoryList);
+        categoryAdapter.setOnItemSelectedListener((position, name) -> {
+            if (isRegionMode) {
+                Integer regionId = findRegionIdByName(name);
+                loadProducts(regionId, null);
+            } else {
+                Integer categoryId = findCategoryIdByName(name);
+                loadProducts(null, categoryId);
+            }
+        });
         recyclerCategory.setAdapter(categoryAdapter);
 
         // 右侧商品
@@ -87,7 +103,14 @@ public class CategoryActivity extends AppCompatActivity {
         tabCategory.setTextColor(getResources().getColor(R.color.gray_medium));
 
         categoryList.clear();
-        categoryList.addAll(Arrays.asList("云南", "四川", "新疆", "内蒙古"));
+        if (regions.isEmpty()) {
+            // 兜底：没拉到后端数据时仍显示静态列表
+            categoryList.addAll(Arrays.asList("云南", "四川", "新疆", "内蒙古"));
+        } else {
+            for (RegionDTO r : regions) {
+                if (r != null && r.name != null) categoryList.add(r.name);
+            }
+        }
         categoryAdapter.notifyDataSetChanged();
     }
 
@@ -99,16 +122,26 @@ public class CategoryActivity extends AppCompatActivity {
         tabCategory.setTextColor(getResources().getColor(R.color.red_primary));
 
         categoryList.clear();
-        categoryList.addAll(Arrays.asList("零食", "饮品", "手工艺", "调料"));
+        if (categories.isEmpty()) {
+            // 兜底：没拉到后端数据时仍显示静态列表
+            categoryList.addAll(Arrays.asList("零食", "饮品", "手工艺", "调料"));
+        } else {
+            for (CategoryDTO c : categories) {
+                if (c != null && c.name != null) categoryList.add(c.name);
+            }
+        }
         categoryAdapter.notifyDataSetChanged();
     }
 
-    /** 加载商品（当前阶段：不区分分类，直接加载） */
-    private void loadProducts() {
+    private void loadProducts(Integer regionId, Integer categoryId) {
         Type type = new TypeToken<Result<ProductListDTO>>() {}.getType();
 
+        String url = "/api/products?page=1&size=20";
+        if (regionId != null) url += "&regionId=" + regionId;
+        if (categoryId != null) url += "&categoryId=" + categoryId;
+
         NetworkUtils.get(
-                "/api/products?page=1&size=20",
+                url,
                 type,
                 new NetworkUtils.Callback<Result<ProductListDTO>>() {
                     @Override
@@ -126,5 +159,68 @@ public class CategoryActivity extends AppCompatActivity {
                     }
                 }
         );
+    }
+
+    private void loadRegions() {
+        Type type = new TypeToken<Result<List<RegionDTO>>>() {}.getType();
+        NetworkUtils.get("/api/regions", type, new NetworkUtils.Callback<Result<List<RegionDTO>>>() {
+            @Override
+            public void onSuccess(Result<List<RegionDTO>> result) {
+                regions.clear();
+                if (result != null && result.isSuccess() && result.getData() != null) {
+                    regions.addAll(result.getData());
+                }
+                loadCategories();
+            }
+
+            @Override
+            public void onError(String msg) {
+                loadCategories();
+            }
+        });
+    }
+
+    private void loadCategories() {
+        Type type = new TypeToken<Result<List<CategoryDTO>>>() {}.getType();
+        NetworkUtils.get("/api/categories", type, new NetworkUtils.Callback<Result<List<CategoryDTO>>>() {
+            @Override
+            public void onSuccess(Result<List<CategoryDTO>> result) {
+                categories.clear();
+                if (result != null && result.isSuccess() && result.getData() != null) {
+                    categories.addAll(result.getData());
+                }
+                // 刷新左侧列表（按当前 tab）
+                if (isRegionMode) switchToRegion(); else switchToCategory();
+                // 默认加载一次商品
+                if (isRegionMode) {
+                    Integer rid = regions.isEmpty() ? null : regions.get(0).id;
+                    loadProducts(rid, null);
+                } else {
+                    Integer cid = categories.isEmpty() ? null : categories.get(0).id;
+                    loadProducts(null, cid);
+                }
+            }
+
+            @Override
+            public void onError(String msg) {
+                loadProducts(null, null);
+            }
+        });
+    }
+
+    private Integer findRegionIdByName(String name) {
+        if (name == null) return null;
+        for (RegionDTO r : regions) {
+            if (r != null && name.equals(r.name)) return r.id;
+        }
+        return null;
+    }
+
+    private Integer findCategoryIdByName(String name) {
+        if (name == null) return null;
+        for (CategoryDTO c : categories) {
+            if (c != null && name.equals(c.name)) return c.id;
+        }
+        return null;
     }
 }

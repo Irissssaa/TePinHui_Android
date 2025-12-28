@@ -7,6 +7,7 @@ public class CommunityComment implements Serializable {
     private String commentId;
     private String userName;
     private int avatarResId;
+    private String avatarUrl; // 后端头像 URL（有则优先展示）
     private String content;
     private String time;
     private int likeCount;
@@ -26,6 +27,7 @@ public class CommunityComment implements Serializable {
         this.commentId = commentId;
         this.userName = userName;
         this.avatarResId = avatarResId;
+        this.avatarUrl = null;
         this.content = content;
         this.time = time;
         this.likeCount = likeCount;
@@ -36,9 +38,18 @@ public class CommunityComment implements Serializable {
     public String getCommentId() { return commentId; }
     public String getUserName() { return userName; }
     public int getAvatarResId() { return avatarResId; }
+    public String getAvatarUrl() { return avatarUrl; }
     public String getContent() { return content; }
     public String getTime() { return time; }
     public int getLikeCount() { return likeCount; }
     public String getParentId() { return parentId; }
     public String getReplyToUser() { return replyToUser; }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+    }
+
+    public void setLikeCount(int likeCount) {
+        this.likeCount = likeCount;
+    }
 }

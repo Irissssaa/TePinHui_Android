@@ -12,8 +12,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.example.tepinhui.NetworkUtils;
 import com.example.tepinhui.R;
+import com.example.tepinhui.Result;
+import com.example.tepinhui.network.UserApiService;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 public class CommunityPostAdapter extends RecyclerView.Adapter<CommunityPostAdapter.VH> {
@@ -62,26 +68,69 @@ public class CommunityPostAdapter extends RecyclerView.Adapter<CommunityPostAdap
         });
 
         // ===== 头像 =====
-        if (post.getAvatarResId() != 0) {
+        if (post.getAvatarUrl() != null && !post.getAvatarUrl().trim().isEmpty()) {
+            Glide.with(h.ivAvatar.getContext())
+                    .load(post.getAvatarUrl())
+                    .placeholder(R.drawable.ic_avatar_placeholder)
+                    .error(R.drawable.ic_avatar_placeholder)
+                    .into(h.ivAvatar);
+        } else if (post.getAvatarResId() != 0) {
             h.ivAvatar.setImageResource(post.getAvatarResId());
         } else {
             h.ivAvatar.setImageResource(R.drawable.ic_avatar_placeholder);
         }
 
         // ===== 帖子图片 =====
-        if (post.getImageList() != null && !post.getImageList().isEmpty()) {
+        if (post.getImageUrls() != null && !post.getImageUrls().isEmpty()
+                && post.getImageUrls().get(0) != null
+                && !post.getImageUrls().get(0).trim().isEmpty()) {
+            h.ivPostImage.setVisibility(View.VISIBLE);
+            Glide.with(h.ivPostImage.getContext())
+                    .load(post.getImageUrls().get(0))
+                    .placeholder(R.drawable.ic_image_placeholder)
+                    .error(R.drawable.ic_image_placeholder)
+                    .into(h.ivPostImage);
+        } else if (post.getImageList() != null && !post.getImageList().isEmpty()) {
             h.ivPostImage.setVisibility(View.VISIBLE);
             h.ivPostImage.setImageResource(post.getImageList().get(0));
         } else {
             h.ivPostImage.setVisibility(View.GONE);
         }
 
-        // ===== 假点赞交互 =====
+        // ===== 点赞（后端） =====
         h.tvLike.setOnClickListener(v -> {
             if (!post.isLiked()) {
-                post.setLiked(true);
-                post.setLikeCount(post.getLikeCount() + 1);
-                notifyItemChanged(position);
+                Integer postId = post.getPostId();
+                if (postId == null) {
+                    Toast.makeText(context, "帖子ID为空", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                String token = UserApiService.getToken(context);
+                if (token == null || token.trim().isEmpty()) {
+                    Toast.makeText(context, "请先登录再点赞", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Type type = new TypeToken<Result<Object>>() {}.getType();
+                NetworkUtils.post("/api/community/posts/" + postId + "/like", null, token, type,
+                        new NetworkUtils.Callback<Result<Object>>() {
+                            @Override
+                            public void onSuccess(Result<Object> result) {
+                                if (result != null && result.isSuccess()) {
+                                    post.setLiked(true);
+                                    post.setLikeCount(post.getLikeCount() + 1); // 乐观更新
+                                    notifyItemChanged(position);
+                                } else {
+                                    Toast.makeText(context, result != null ? result.getMsg() : "点赞失败", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onError(String msg) {
+                                Toast.makeText(context, "点赞失败：" + (msg == null ? "" : msg), Toast.LENGTH_SHORT).show();
+                            }
+                        });
             } else {
                 Toast.makeText(context, "你已经点过赞了", Toast.LENGTH_SHORT).show();
             }

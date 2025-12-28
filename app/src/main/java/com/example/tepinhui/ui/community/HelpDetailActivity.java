@@ -72,7 +72,7 @@ public class HelpDetailActivity extends AppCompatActivity {
                     CommunityComment c = new CommunityComment(
                             String.valueOf(dto.id),
                             dto.userName,
-                            R.drawable.avatar_1,     // 先用占位头像
+                            AvatarUtil.forUser(dto.userName),     // 随机但固定
                             dto.content,
                             dto.createdAt,
                             dto.likeCount,

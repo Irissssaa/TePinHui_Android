@@ -80,7 +80,7 @@ public class HelpFragment extends Fragment {
 
                     CommunityPost post = new CommunityPost(
                             dto.userName,
-                            R.drawable.avatar_1,     // 先固定占位头像
+                            AvatarUtil.forUser(dto.userName),
                             dto.content,
                             dto.createdAt,           // 后端返回的时间字符串
                             dto.likeCount,
@@ -88,6 +88,8 @@ public class HelpFragment extends Fragment {
                             new ArrayList<>()        // 先不处理图片
                     );
                     post.setPostId(dto.id);
+                    post.setAvatarUrl(dto.avatarUrl);
+                    post.setImageUrls(dto.images);
                     postList.add(post);
                 }
 
@@ -101,6 +103,12 @@ public class HelpFragment extends Fragment {
                 toast("加载失败: " + msg);
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadHelpPosts();
     }
 
     private void toast(String s) {
