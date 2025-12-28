@@ -2,16 +2,17 @@ package com.example.tepinhui.ui.mine;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.tepinhui.R;
 import com.example.tepinhui.dto.AddressDTO;
 import com.example.tepinhui.network.AddressApiService;
-import com.example.tepinhui.network.UserApiService;
 import com.example.tepinhui.Result;
 import com.example.tepinhui.NetworkUtils;
 
@@ -62,9 +63,60 @@ public class EditAddressActivity extends AppCompatActivity {
 
     private void loadAddressData() {
         if (addressId != -1) {
+            // 显示加载状态
+            btnSave.setEnabled(false);
+            btnSave.setText("加载中...");
+
             // 加载现有地址数据
-            // 这里需要调用获取单个地址详情的接口
-            // 暂时先留空
+            loadAddressDetail(addressId);
+        }
+    }
+
+    private void loadAddressDetail(int id) {
+        AddressApiService.getAddressDetail(this, id, new NetworkUtils.Callback<Result<AddressDTO>>() {
+            @Override
+            public void onSuccess(Result<AddressDTO> result) {
+                btnSave.setEnabled(true);
+                btnSave.setText("保存地址");
+
+                if (result != null && result.isSuccess() && result.getData() != null) {
+                    populateAddressData(result.getData());
+                } else {
+                    String errorMsg = result != null ? result.getMsg() : "加载地址失败";
+                    Toast.makeText(EditAddressActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onError(String msg) {
+                btnSave.setEnabled(true);
+                btnSave.setText("保存地址");
+                Toast.makeText(EditAddressActivity.this, "网络错误: " + msg, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void populateAddressData(AddressDTO address) {
+        if (address == null) return;
+
+        etReceiver.setText(address.getReceiver());
+        etPhone.setText(address.getPhone());
+        etProvince.setText(address.getProvince());
+        etCity.setText(address.getCity());
+        etDistrict.setText(address.getDistrict());
+        etDetail.setText(address.getDetail());
+
+        if (address.getPostCode() != null) {
+            etPostCode.setText(address.getPostCode());
+        }
+
+        if (address.getIsDefault() != null) {
+            cbDefault.setChecked(address.getIsDefault());
+        }
+
+        // 更新标题
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle("编辑收货地址");
         }
     }
 
@@ -140,43 +192,57 @@ public class EditAddressActivity extends AppCompatActivity {
     }
 
     private void addAddress(Map<String, Object> addressData) {
+        btnSave.setEnabled(false);
+        btnSave.setText("保存中...");
+
         AddressApiService.addAddress(this, addressData, new NetworkUtils.Callback<Result<AddressDTO>>() {
             @Override
             public void onSuccess(Result<AddressDTO> result) {
+                btnSave.setEnabled(true);
+                btnSave.setText("保存地址");
+
                 if (result != null && result.isSuccess()) {
                     Toast.makeText(EditAddressActivity.this, "添加地址成功", Toast.LENGTH_SHORT).show();
                     finish();
                 } else {
-                    Toast.makeText(EditAddressActivity.this,
-                            "添加失败: " + (result != null ? result.getMsg() : "未知错误"),
-                            Toast.LENGTH_SHORT).show();
+                    String errorMsg = result != null ? result.getMsg() : "添加失败";
+                    Toast.makeText(EditAddressActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onError(String msg) {
+                btnSave.setEnabled(true);
+                btnSave.setText("保存地址");
                 Toast.makeText(EditAddressActivity.this, "网络错误: " + msg, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void updateAddress(Map<String, Object> addressData) {
+        btnSave.setEnabled(false);
+        btnSave.setText("更新中...");
+
         AddressApiService.updateAddress(this, addressId, addressData,
                 new NetworkUtils.Callback<Result<AddressDTO>>() {
                     @Override
                     public void onSuccess(Result<AddressDTO> result) {
+                        btnSave.setEnabled(true);
+                        btnSave.setText("保存地址");
+
                         if (result != null && result.isSuccess()) {
                             Toast.makeText(EditAddressActivity.this, "更新地址成功", Toast.LENGTH_SHORT).show();
                             finish();
                         } else {
-                            Toast.makeText(EditAddressActivity.this,
-                                    "更新失败: " + (result != null ? result.getMsg() : "未知错误"),
-                                    Toast.LENGTH_SHORT).show();
+                            String errorMsg = result != null ? result.getMsg() : "更新失败";
+                            Toast.makeText(EditAddressActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onError(String msg) {
+                        btnSave.setEnabled(true);
+                        btnSave.setText("保存地址");
                         Toast.makeText(EditAddressActivity.this, "网络错误: " + msg, Toast.LENGTH_SHORT).show();
                     }
                 });

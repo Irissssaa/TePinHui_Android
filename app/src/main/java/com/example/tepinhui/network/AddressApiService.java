@@ -29,6 +29,17 @@ public class AddressApiService {
         Type responseType = new TypeToken<Result<List<AddressDTO>>>(){}.getType();
         NetworkUtils.get("/api/addresses", token, responseType, callback);
     }
+    public static void getAddressDetail(Context context, int addressId,
+                                        NetworkUtils.Callback<Result<AddressDTO>> callback) {
+        String token = UserApiService.getToken(context);
+        if (token.isEmpty()) {
+            callback.onError("用户未登录");
+            return;
+        }
+
+        Type responseType = new TypeToken<Result<AddressDTO>>(){}.getType();
+        NetworkUtils.get("/api/addresses/" + addressId, token, responseType, callback);
+    }
 
     /**
      * 获取默认地址

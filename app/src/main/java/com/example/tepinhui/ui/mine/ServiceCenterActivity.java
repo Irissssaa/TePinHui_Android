@@ -1,72 +1,79 @@
 package com.example.tepinhui.ui.mine;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.tepinhui.R;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.example.tepinhui.ui.service.OnlineServiceActivity;
 
 public class ServiceCenterActivity extends AppCompatActivity {
 
-    private ImageView ivBack;
-    private TextView tvMore, tvServiceStatus;
-    private RecyclerView rvMessages;
-    private EditText etInput;
-    private Button btnSend;
-
-    // 这里需要创建一个消息适配器
-    // private MessageAdapter messageAdapter;
-    // private List<MessageDTO> messages;
+    private LinearLayout layoutOrderQa, layoutPaymentQa, layoutDeliveryQa, layoutAfterSaleQa;
+    private LinearLayout layoutContactService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_service_center);
 
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setTitle("服务中心");
+        }
+
         initViews();
         setupListeners();
     }
 
     private void initViews() {
-        ivBack = findViewById(R.id.iv_back);
-        tvMore = findViewById(R.id.tv_more);
-        tvServiceStatus = findViewById(R.id.tv_service_status);
-        rvMessages = findViewById(R.id.rv_messages);
-        etInput = findViewById(R.id.et_input);
-        btnSend = findViewById(R.id.btn_send);
+        // 常见问题分类
+        layoutOrderQa = findViewById(R.id.layout_order_qa);
+        layoutPaymentQa = findViewById(R.id.layout_payment_qa);
+        layoutDeliveryQa = findViewById(R.id.layout_delivery_qa);
+        layoutAfterSaleQa = findViewById(R.id.layout_after_sale_qa);
 
-        // 初始化消息列表
-        // messages = new ArrayList<>();
-        // messageAdapter = new MessageAdapter(messages);
-
-        rvMessages.setLayoutManager(new LinearLayoutManager(this));
-        // rvMessages.setAdapter(messageAdapter);
+        // 联系客服按钮
+        layoutContactService = findViewById(R.id.layout_contact_service);
     }
 
     private void setupListeners() {
-        ivBack.setOnClickListener(v -> finish());
+        // 返回按钮
+        findViewById(R.id.iv_back).setOnClickListener(v -> finish());
 
-        tvMore.setOnClickListener(v -> {
-            Toast.makeText(this, "更多选项", Toast.LENGTH_SHORT).show();
+        // 常见问题分类点击
+        layoutOrderQa.setOnClickListener(v -> {
+            Toast.makeText(this, "查看订单问题", Toast.LENGTH_SHORT).show();
         });
 
-        btnSend.setOnClickListener(v -> {
-            String message = etInput.getText().toString().trim();
-            if (!message.isEmpty()) {
-                // 发送消息
-                // 这里添加发送消息的逻辑
-                etInput.setText("");
-            }
+        layoutPaymentQa.setOnClickListener(v -> {
+            Toast.makeText(this, "查看支付问题", Toast.LENGTH_SHORT).show();
         });
+
+        layoutDeliveryQa.setOnClickListener(v -> {
+            Toast.makeText(this, "查看配送问题", Toast.LENGTH_SHORT).show();
+        });
+
+        layoutAfterSaleQa.setOnClickListener(v -> {
+            Toast.makeText(this, "查看售后问题", Toast.LENGTH_SHORT).show();
+        });
+
+        // 联系客服点击
+        layoutContactService.setOnClickListener(v -> {
+            // 跳转到在线客服页面
+            Intent intent = new Intent(ServiceCenterActivity.this, OnlineServiceActivity.class);
+            startActivity(intent);
+        });
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return true;
     }
 }
