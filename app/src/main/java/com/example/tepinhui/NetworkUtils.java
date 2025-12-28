@@ -8,7 +8,6 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import java.lang.reflect.Type;
@@ -16,7 +15,6 @@ import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -28,7 +26,7 @@ public class NetworkUtils {
     // 如果是用模拟器，通常是 http://10.0.2.2:8080
     // 如果是用真机，通常是 http://192.168.x.x:8080
     // 注意：后端 LoginController 如果加了 /api 前缀，这里不要加，在调用的时候加
-    private static final String BASE_URL = "http://10.101.228.74:8080";
+    private static final String BASE_URL = "http://10.101.229.2:8080";
 
     private static final OkHttpClient client = new OkHttpClient.Builder()
             .connectTimeout(10, TimeUnit.SECONDS) // 连接超时时间
@@ -168,35 +166,41 @@ public class NetworkUtils {
         sendRequest(request, responseType, callback);
     }
 
-    /**
-     * 上传图片（multipart/form-data）
-     * - 后端：POST /api/upload，表单字段名：file
-     * - 返回：Result<String>（data 为图片可访问 URL）
-     */
-    public static <T> void uploadImage(
+    // ========================
+    // PUT / DELETE with token
+    // ========================
+
+    public static <T> void put(
             String urlPart,
-            File file,
+            Object bodyObj,
             String token,
             Type responseType,
             Callback<T> callback
     ) {
-        if (file == null || !file.exists()) {
-            runOnUI(() -> callback.onError("图片文件不存在"));
-            return;
-        }
-
         String url = BASE_URL + urlPart;
-        MediaType mediaType = MediaType.parse("image/*");
-        RequestBody fileBody = RequestBody.create(file, mediaType);
-
-        RequestBody body = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("file", file.getName(), fileBody)
-                .build();
+        String json = gson.toJson(bodyObj);
+        RequestBody body = RequestBody.create(json, MEDIA_TYPE_JSON);
 
         Request request = new Request.Builder()
                 .url(url)
-                .post(body)
+                .put(body)
+                .addHeader("Authorization", "Bearer " + token)
+                .build();
+
+        sendRequest(request, responseType, callback);
+    }
+
+    public static <T> void delete(
+            String urlPart,
+            String token,
+            Type responseType,
+            Callback<T> callback
+    ) {
+        String url = BASE_URL + urlPart;
+
+        Request request = new Request.Builder()
+                .url(url)
+                .delete()
                 .addHeader("Authorization", "Bearer " + token)
                 .build();
 

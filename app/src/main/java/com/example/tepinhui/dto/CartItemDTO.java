@@ -15,4 +15,8 @@ public class CartItemDTO {
     public String getImageUrl() { return imageUrl; }
     public int getQuantity() { return quantity; }
     public boolean isChecked() { return checked; }
+
+    // setters (用于前端同步/回滚)
+    public void setQuantity(int quantity) { this.quantity = quantity; }
+    public void setChecked(boolean checked) { this.checked = checked; }
 }
