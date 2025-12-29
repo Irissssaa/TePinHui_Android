@@ -28,6 +28,17 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
+        <!-- 地图入口（省份选择） -->
+        <TextView
+            android:id="@+id/btn_map"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="地图"
+            android:textSize="14sp"
+            android:textColor="#333333"
+            android:padding="8dp"
+            android:clickable="true" />
+
         <!-- 按地区 -->
         <TextView
             android:id="@+id/tab_region"

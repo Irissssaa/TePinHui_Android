@@ -2,6 +2,7 @@ package com.example.tepinhui.ui.category;
 
 import android.os.Bundle;
 import android.widget.TextView;
+import android.content.Intent;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -16,6 +17,7 @@ import com.example.tepinhui.dto.ProductDTO;
 import com.example.tepinhui.dto.ProductListDTO;
 import com.example.tepinhui.dto.RegionDTO;
 import com.example.tepinhui.ui.product.ProductAdapter;
+import com.example.tepinhui.ui.story.ProvinceMapActivity;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -28,6 +30,7 @@ public class CategoryActivity extends AppCompatActivity {
     // 顶部切换
     private TextView tabRegion;
     private TextView tabCategory;
+    private TextView btnMap;
 
     // 左右 RecyclerView
     private RecyclerView recyclerCategory;
@@ -65,6 +68,7 @@ public class CategoryActivity extends AppCompatActivity {
     private void initView() {
         tabRegion = findViewById(R.id.tab_region);
         tabCategory = findViewById(R.id.tab_category);
+        btnMap = findViewById(R.id.btn_map);
         recyclerCategory = findViewById(R.id.recycler_category);
         recyclerProducts = findViewById(R.id.recycler_products);
     }
@@ -93,6 +97,11 @@ public class CategoryActivity extends AppCompatActivity {
     private void initTabs() {
         tabRegion.setOnClickListener(v -> switchToRegion());
         tabCategory.setOnClickListener(v -> switchToCategory());
+        btnMap.setOnClickListener(v -> openProvinceMap());
+    }
+
+    private void openProvinceMap() {
+        startActivity(new Intent(this, ProvinceMapActivity.class));
     }
 
     /** 切换为「按地区」 */

@@ -1,5 +1,6 @@
 package com.example.tepinhui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -13,12 +14,14 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
 
+    private BottomNavigationView navView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        BottomNavigationView navView = findViewById(R.id.nav_view);
+        navView = findViewById(R.id.nav_view);
 
         // 设置默认显示首页
         if (savedInstanceState == null) {
@@ -55,15 +58,31 @@ public class MainActivity extends AppCompatActivity {
             return false;
         });
 
-        String targetTab = getIntent().getStringExtra("target_tab");
-        int communityTab = getIntent().getIntExtra("community_tab", -1);
+        handleIntent(getIntent());
+
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        if (intent == null || navView == null) return;
+
+        String targetTab = intent.getStringExtra("target_tab");
+        int communityTab = intent.getIntExtra("community_tab", -1);
 
         if ("community".equals(targetTab)) {
+            // 先设置默认 Tab，再切换到底部导航，确保任何情况下都能生效
+            CommunityFragment.setDefaultTab(communityTab);
             navView.setSelectedItemId(R.id.navigation_community);
 
-            // 把 tab index 传给 CommunityFragment
-            CommunityFragment.setDefaultTab(communityTab);
+            // 防止旋转/复用时重复触发
+            intent.removeExtra("target_tab");
+            intent.removeExtra("community_tab");
         }
-
     }
 }

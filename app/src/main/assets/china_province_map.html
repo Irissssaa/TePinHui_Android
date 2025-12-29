@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>中国地图（d3 + SVG 离线版）</title>
+  <link rel="stylesheet" href="./china.css">
+  <style>
+    html, body { width: 100%; height: 100%; margin: 0; padding: 0; background: #ffffff; overflow: hidden; }
+    #wrap { width: 100%; height: 100%; position: relative; }
+    #china { width: 100%; height: 100%; display: block; }
+    /* tooltip 样式由 china.css 提供，这里只确保它能盖在最上层 */
+    #tooltip { z-index: 9999; }
+  </style>
+</head>
+<body>
+  <div id="wrap">
+    <svg id="china"></svg>
+    <div id="tooltip"></div>
+  </div>
+
+  <!-- 完全离线：本地 assets 引入 -->
+  <script src="./d3.min.js"></script>
+  <script src="./china_d3.js"></script>
+
+  <script>
+    (function () {
+      function callAndroid(name) {
+        try {
+          if (window.Android && typeof window.Android.onProvinceClick === 'function') {
+            window.Android.onProvinceClick(name || '');
+          } else {
+            alert('点击：' + (name || ''));
+          }
+        } catch (e) {}
+      }
+
+      function draw() {
+        var svg = document.getElementById('china');
+        // 清空旧内容（china.draw 会 append）
+        while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+        var baseW = 960, baseH = 700;
+        var w = window.innerWidth || baseW;
+        var h = window.innerHeight || baseH;
+        var s = Math.min(w / baseW, h / baseH);
+        if (!isFinite(s) || s <= 0) s = 1;
+
+        // 用 scale + svg 使用全屏宽高（否则会出现“贴左上角、不居中”）
+        var ch = china()
+          .language("cn")
+          .width(w)
+          .height(h)
+          .scale(s)
+          .colorDefault("#E6F7FF")   // 默认填充更接近地图效果
+          .colorLake("#ffffff");
+
+        ch.draw("#china");
+
+        // 绑定点击事件：把省份名回调给 Android
+        d3.selectAll("#china .province").on("click", function (d) {
+          // d.name 是中文省名
+          callAndroid(d && d.name ? d.name : "");
+        });
+      }
+
+      draw();
+      window.addEventListener("resize", function () {
+        // 简单重绘保证自适应
+        draw();
+      });
+    })();
+  </script>
+</body>
+</html>
+
+

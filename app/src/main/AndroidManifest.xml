@@ -73,6 +73,8 @@
         <!-- ================= 故事 ================= -->
         <activity android:name=".ui.story.StoryListActivity" />
         <activity android:name=".ui.story.StoryDetailActivity" />
+        <activity android:name=".ui.story.ProvinceMapActivity" />
+        <activity android:name=".ui.story.ProvinceProductsActivity" />
 
         <!-- ================= 我的 ================= -->
         <activity

@@ -72,6 +72,8 @@ public class HomeFragment extends Fragment {
             Intent intent = new Intent(getContext(), com.example.tepinhui.MainActivity.class);
             intent.putExtra("target_tab", "community");
             intent.putExtra("community_tab", 0); // 0 = 本周热点
+            // 避免重复创建 MainActivity；若已在栈顶则走 onNewIntent
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
         });
 
